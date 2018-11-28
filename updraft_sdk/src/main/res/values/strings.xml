@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">updraft_sdk</string>
+    <!-- GENERAL -->
+    <string name="updraft_alert_button_cancel">Cancel</string>
+    <string name="updraft_alert_button_ok">Ok</string>
+
+    <!-- AUTO UPDATE -->
+    <string name="updraft_autoUpdate_alert_newVersionAvailable_title">New version available</string>
+    <string name="updraft_autoUpdate_alert_newVersionAvailable_message">You will be redirected to download the new version of the app</string>
+
+    <!-- FEEDBACK -->
+    <string name="updraft_feedback_alert_howToGiveFeedback_title">Give Feedback</string>
+    <string name="updraft_feedback_alert_howToGiveFeedback_message">Shake device or take a screenshot to give a feedback</string>
+
+    <string name="updraft_feedback_title">Give Feedback</string>
+    <string name="updraft_feedback_button_next"><u>next</u></string>
+    <string name="updraft_feedback_button_previous"><u>previous</u></string>
+    <string name="updraft_feedback_button_sendFeedback">Send Feedback</string>
+    <string name="updraft_feedback_drawExplanation">Draw\nsomething\nhere...</string>
+    <string name="updraft_feedback_textField_description_placeholder">Describe the issue...\nBrevity is the source of wit</string>
+    <string name="updraft_feedback_textField_email_placeholder">Your Email</string>
+    <string name="updraft_feedback_picker_feedbackType_title">Type of Feedback</string>
+
+    <string name="updraft_feedback_type_design">Design</string>
+    <string name="updraft_feedback_type_bug">Bug</string>
+    <string name="updraft_feedback_type_feedback">Feedback</string>
+
+    <string name="updraft_feedback_send_inProgress">Sending...</string>
+    <string name="updraft_feedback_send_success">Thank you for the feedback</string>
+    <string name="updraft_feedback_send_failure_title">Failed to send feedback</string>
+    <string name="updraft_feedback_send_failure_subtitle">An error occured when sending feedback.</string>
+    <string name="GENERAL_ERROR">Error</string>
+</resources>

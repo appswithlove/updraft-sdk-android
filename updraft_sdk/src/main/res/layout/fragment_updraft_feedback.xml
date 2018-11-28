@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/updraft_feedback_screen_padding_bottom"
+            android:paddingEnd="@dimen/updraft_feedback_screen_padding_end"
+            android:paddingStart="@dimen/updraft_feedback_screen_padding_start"
+            android:paddingTop="@dimen/updraft_feedback_screen_padding_top">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/updraft_feedback_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/updraft_yellow" />
+
+            <EditText
+                android:id="@+id/updraft_feedback_description"
+                style="@style/UpdraftWhiteBoxEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/updraft_feedback_description_input_margin_top"
+                android:gravity="start|top"
+                android:hint="@string/updraft_feedback_textField_description_placeholder"
+                android:inputType="textMultiLine"
+                android:lines="6"
+                android:minLines="6" />
+
+            <EditText
+                android:id="@+id/updraft_feedback_email"
+                style="@style/UpdraftWhiteBoxEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/updraft_feedback_email_input_margin_top"
+                android:hint="@string/updraft_feedback_textField_email_placeholder"
+                android:inputType="textEmailAddress" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/updraft_feedback_buttons_margin_top">
+
+                <TextView
+                    android:id="@+id/updraft_feedback_previous_button"
+                    style="@style/UpdraftBackAndPreviousButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|bottom"
+                    android:text="@string/updraft_feedback_button_previous" />
+
+                <Button
+                    android:id="@+id/updraft_feedback_send_button"
+                    style="@style/UpdraftButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:text="@string/updraft_feedback_button_sendFeedback"
+                    android:textAllCaps="false" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/updraft_feedback_progress_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/charcoal_grey"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/updraft_feedback_progress_container_padding_bottom"
+            android:paddingEnd="@dimen/updraft_feedback_progress_container_padding_end"
+            android:paddingStart="@dimen/updraft_feedback_progress_container_padding_start"
+            android:paddingTop="@dimen/updraft_feedback_progress_container_padding_top"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/updraft_feedback_progress_title"
+                    style="@style/UpdraftDrawSomethingHereText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/updraft_feedback_progress_text_margin_bottom"
+                    android:text="@string/updraft_feedback_send_inProgress" />
+
+                <ProgressBar
+                    android:id="@+id/updraft_feedback_progress_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="@dimen/updraft_progressbar_width"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:maxHeight="@dimen/updraft_progressbar_height"
+                    android:minHeight="@dimen/updraft_progressbar_height"
+                    android:progressDrawable="@drawable/updraft_progress_drawable" />
+
+                <TextView
+                    android:id="@+id/updraft_feedback_progress_text"
+                    style="@style/UpdraftFeedbackProgressText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/updraft_feedback_progress_cancel"
+                style="@style/UpdraftBackAndPreviousButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:text="@string/updraft_alert_button_cancel" />
+        </FrameLayout>
+    </FrameLayout>
+</android.support.v4.widget.NestedScrollView>

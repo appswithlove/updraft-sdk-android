@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/updraft_drawing_container_margin_end"
+        android:layout_marginStart="@dimen/drawing_container_margin_start"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/updraft_screenshot_bitmap_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null" />
+
+        <com.rm.freedrawview.FreeDrawView
+            android:id="@+id/updraft_drawing_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            app:paintAlpha="255"
+            app:paintColor="@android:color/black"
+            app:paintWidth="4dp"
+            app:resizeBehaviour="crop" />
+
+        <FrameLayout
+            android:id="@+id/updraft_draw_here_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/charcoal_grey_70">
+
+            <TextView
+                android:text="@string/updraft_feedback_drawExplanation"
+                android:layout_width="wrap_content"
+                style="@style/UpdraftDrawSomethingHereText"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/updraft_drawing_container_buttons_margin_bottom"
+        android:layout_marginTop="@dimen/updraft_drawing_container_buttons_margin_top"
+        android:orientation="horizontal">
+
+
+        <RadioGroup
+            android:id="@+id/updraft_color_select_radiogroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/updraft_color_button_black"
+                android:layout_width="@dimen/updraft_radio_button_size"
+                android:layout_height="@dimen/updraft_radio_button_size"
+                android:layout_marginEnd="@dimen/updraft_radio_buttons_horizontal_margin"
+                android:layout_marginStart="@dimen/updraft_radio_buttons_horizontal_margin"
+                android:background="@drawable/updraft_black_button"
+                android:button="@null" />
+
+            <RadioButton
+                android:id="@+id/updraft_color_button_white"
+                android:layout_width="@dimen/updraft_radio_button_size"
+                android:layout_height="@dimen/updraft_radio_button_size"
+                android:layout_marginEnd="@dimen/updraft_radio_buttons_horizontal_margin"
+                android:background="@drawable/updraft_white_button"
+                android:button="@null" />
+
+            <RadioButton
+                android:id="@+id/updraft_color_button_yellow"
+                android:layout_width="@dimen/updraft_radio_button_size"
+                android:layout_height="@dimen/updraft_radio_button_size"
+                android:layout_marginEnd="@dimen/updraft_radio_buttons_horizontal_margin"
+                android:background="@drawable/updraft_yellow_button"
+                android:button="@null" />
+
+            <RadioButton
+                android:id="@+id/updraft_color_button_red"
+                android:layout_width="@dimen/updraft_radio_button_size"
+                android:layout_height="@dimen/updraft_radio_button_size"
+                android:layout_marginEnd="@dimen/updraft_radio_buttons_horizontal_margin"
+                android:background="@drawable/updraft_red_button"
+                android:button="@null" />
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/updraft_color_select_reset_button"
+            android:layout_width="@dimen/updraft_radio_button_size"
+            android:layout_height="@dimen/updraft_radio_button_size"
+            android:contentDescription="@null"
+            android:src="@drawable/exit_icon" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/updraft_feedback_next_button"
+            style="@style/UpdraftBackAndPreviousButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/updraft_drawing_container_buttons_margin_end"
+            android:text="@string/updraft_feedback_button_next" />
+
+    </LinearLayout>
+</LinearLayout>

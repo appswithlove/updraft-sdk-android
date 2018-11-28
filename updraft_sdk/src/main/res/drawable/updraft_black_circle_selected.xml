@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="oval">
+            <size
+                android:width="@dimen/updraft_radio_button_size"
+                android:height="@dimen/updraft_radio_button_size" />
+            <gradient
+                android:endColor="@color/updraft_color_transparent"
+                android:gradientRadius="60%p"
+                android:startColor="@color/updraft_color_blue"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/updraft_black_circle" />
+</layer-list>

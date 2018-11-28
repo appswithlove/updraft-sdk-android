@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="charcoal_grey">#38383c</color>
+    <color name="updraft_yellow">#f6b33e</color>
+    <color name="updraft_red">#eb6764</color>
+    <color name="updraft_color_blue">#4a90e2</color>
+    <color name="updraft_color_transparent">#00000000</color>
+    <color name="updraft_greyish">#a6a6a6</color>
+    <color name="charcoal_grey_70">#b338383c</color>
+</resources>
