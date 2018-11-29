@@ -58,6 +58,7 @@ dependencies {
         settings.setBaseUrl(Settings.BASE_URL_STAGING);
         //Optional set log level
         settings.setLogLevel(Settings.LOG_LEVEL_DEBUG);
+        //Optional set if should show start alert
         settings.setShowStartAlert(false);
         Updraft.initialize(this, settings);
         Updraft.getInstance().start();
