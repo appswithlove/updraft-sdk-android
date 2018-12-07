@@ -1,8 +1,10 @@
 package com.apsswithlove.updraft_sdk.api;
 
 import com.apsswithlove.updraft_sdk.api.request.CheckLastVersionRequest;
+import com.apsswithlove.updraft_sdk.api.request.FeedbackEnabledRequest;
 import com.apsswithlove.updraft_sdk.api.request.GetLastVersionRequest;
 import com.apsswithlove.updraft_sdk.api.response.CheckLastVersionResponse;
+import com.apsswithlove.updraft_sdk.api.response.FeedbackEnabledResponse;
 import com.apsswithlove.updraft_sdk.api.response.FeedbackMobileResponse;
 import com.apsswithlove.updraft_sdk.api.response.GetLastVersionResponse;
 import io.reactivex.Single;
@@ -29,4 +31,7 @@ public interface UpdraftService {
     @Multipart
     @POST("feedback-mobile/")
     Single<FeedbackMobileResponse> feedbackMobile(@PartMap Map<String, RequestBody> map);
+
+    @POST("feedback-mobile-enabled/")
+    Single<FeedbackEnabledResponse> isFeedbackEnabled(@Body FeedbackEnabledRequest feedbackEnabledRequest);
 }

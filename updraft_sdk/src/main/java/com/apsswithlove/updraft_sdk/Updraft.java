@@ -2,8 +2,10 @@ package com.apsswithlove.updraft_sdk;
 
 import android.app.Application;
 import com.apsswithlove.updraft_sdk.api.ApiWrapper;
+import com.apsswithlove.updraft_sdk.interactor.CheckFeedbackEnabledInteractor;
 import com.apsswithlove.updraft_sdk.interactor.CheckUpdateInteractor;
 import com.apsswithlove.updraft_sdk.manager.AppUpdateManager;
+import com.apsswithlove.updraft_sdk.manager.CheckFeedbackEnabledManager;
 import com.apsswithlove.updraft_sdk.manager.ShakeDetectorManager;
 import com.apsswithlove.updraft_sdk.presentation.UpdraftSdkUi;
 
@@ -20,6 +22,7 @@ public class Updraft {
     private static Updraft instance;
     private AppUpdateManager mAppUpdateManager;
     private ShakeDetectorManager mShakeDetectorManager;
+    private CheckFeedbackEnabledManager mCheckFeedbackEnabledManager;
     private ApiWrapper mApiWrapper;
 
     private Updraft(Application application, Settings settings) {
@@ -27,7 +30,11 @@ public class Updraft {
         CheckUpdateInteractor checkUpdateInteractor = new CheckUpdateInteractor(mApiWrapper);
         UpdraftSdkUi updraftSdkUi = new UpdraftSdkUi(application, settings);
         mAppUpdateManager = new AppUpdateManager(application, checkUpdateInteractor, updraftSdkUi);
-        mShakeDetectorManager = new ShakeDetectorManager(application, updraftSdkUi, settings);
+        CheckFeedbackEnabledInteractor checkFeedbackEnabledInteractor = new CheckFeedbackEnabledInteractor(mApiWrapper, application);
+
+        mCheckFeedbackEnabledManager = new CheckFeedbackEnabledManager(updraftSdkUi, checkFeedbackEnabledInteractor);
+
+        mShakeDetectorManager = new ShakeDetectorManager(application, updraftSdkUi, settings, mCheckFeedbackEnabledManager);
     }
 
     public static void initialize(Application application, Settings settings) {
@@ -55,6 +62,7 @@ public class Updraft {
     public void start() {
         mAppUpdateManager.start();
         mShakeDetectorManager.start();
+        mCheckFeedbackEnabledManager.start();
     }
 
     public ApiWrapper getApiWrapper() {

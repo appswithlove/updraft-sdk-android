@@ -10,11 +10,13 @@
 
     <!-- FEEDBACK -->
     <string name="updraft_feedback_alert_howToGiveFeedback_title">Give Feedback</string>
-    <string name="updraft_feedback_alert_howToGiveFeedback_message">Shake device or take a screenshot to give a feedback</string>
+    <string name="updraft_feedback_alert_howToGiveFeedback_message">Take a screenshot to give a feedback or report a bug.</string>
+    <string name="updraft_feedback_alert_feedbackDisabled_title">Feedback Disabled</string>
+    <string name="updraft_feedback_alert_feedbackDisabled_message">Feedback functionality has been disabled. You can no longer send a feedback or report a bug by taking a screenshot.</string>
 
     <string name="updraft_feedback_title">Give Feedback</string>
-    <string name="updraft_feedback_button_next"><u>next</u></string>
-    <string name="updraft_feedback_button_previous"><u>previous</u></string>
+    <string name="updraft_feedback_button_next">next</string>
+    <string name="updraft_feedback_button_previous">previous</string>
     <string name="updraft_feedback_button_sendFeedback">Send Feedback</string>
     <string name="updraft_feedback_drawExplanation">Draw\nsomething\nhere...</string>
     <string name="updraft_feedback_textField_description_placeholder">Describe the issue...\nBrevity is the source of wit</string>

@@ -18,6 +18,11 @@ import static com.apsswithlove.updraft_sdk.Updraft.UPDRAFT_TAG;
 
 public class ShakeDetectorManager implements LifecycleObserver, SensorEventListener {
 
+    public interface ShakeDetectorListener {
+
+        void onShakeDetected();
+    }
+
     private static final float SHAKE_THRESHOLD_GRAVITY = 2.7F;
     private static final int SHAKE_SLOP_TIME_MS = 500;
     private static final int SHAKE_COUNT_RESET_TIME_MS = 3000;
@@ -26,18 +31,22 @@ public class ShakeDetectorManager implements LifecycleObserver, SensorEventListe
     private UpdraftSdkUi mUpdraftSdkUi;
     private Settings mSettings;
     private Sensor mAccelerometer;
+    private ShakeDetectorListener mShakeDetectorListener;
+
     private long mShakeTimestamp;
     private int mShakeCount;
     private boolean mShouldListen = true;
 
     public ShakeDetectorManager(Application application,
                                 UpdraftSdkUi updraftSdkUi,
-                                Settings settings) {
+                                Settings settings,
+                                ShakeDetectorListener shakeDetectorListener) {
         mSensorManager = (SensorManager) application.getSystemService(SENSOR_SERVICE);
         mUpdraftSdkUi = updraftSdkUi;
         mSettings = settings;
         mAccelerometer = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetectorListener = shakeDetectorListener;
 
     }
 
@@ -103,7 +112,9 @@ public class ShakeDetectorManager implements LifecycleObserver, SensorEventListe
             if (mSettings.getLogLevel() == Settings.LOG_LEVEL_DEBUG) {
                 Log.d(UPDRAFT_TAG, "shake event detected");
             }
-            mUpdraftSdkUi.showFeedback();
+            if (mShakeDetectorListener != null) {
+                mShakeDetectorListener.onShakeDetected();
+            }
             stopListening();
         }
     }

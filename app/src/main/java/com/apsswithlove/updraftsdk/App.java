@@ -4,6 +4,9 @@ import android.app.Application;
 import com.apsswithlove.updraft_sdk.Settings;
 import com.apsswithlove.updraft_sdk.Updraft;
 
+import static com.apsswithlove.updraftsdk.Keys.APP_KEY;
+import static com.apsswithlove.updraftsdk.Keys.SDK_KEY;
+
 /**
  * Created by satori on 3/27/18.
  */
@@ -14,11 +17,10 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Settings settings = new Settings();
-        settings.setAppKey("7ae57391493b44bdbe6c5d18cd6f8fef");
-        settings.setSdkKey("30cf32ded8f64bbfb0bb4db0bc719316 ");
+        settings.setAppKey(APP_KEY);
+        settings.setSdkKey(SDK_KEY);
         settings.setStoreRelease(false);
-        settings.setBaseUrl(Settings.BASE_URL_STAGING);
-        settings.setLogLevel(Settings.LOG_LEVEL_ERROR);
+        settings.setLogLevel(Settings.LOG_LEVEL_DEBUG);
         settings.setShowStartAlert(false);
         Updraft.initialize(this, settings);
         Updraft.getInstance().start();

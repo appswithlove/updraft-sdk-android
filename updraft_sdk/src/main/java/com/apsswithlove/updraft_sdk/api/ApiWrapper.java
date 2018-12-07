@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import com.apsswithlove.updraft_sdk.BuildConfig;
 import com.apsswithlove.updraft_sdk.Settings;
 import com.apsswithlove.updraft_sdk.api.request.CheckLastVersionRequest;
+import com.apsswithlove.updraft_sdk.api.request.FeedbackEnabledRequest;
 import com.apsswithlove.updraft_sdk.api.request.FeedbackMobileRequest;
 import com.apsswithlove.updraft_sdk.api.request.GetLastVersionRequest;
 import com.apsswithlove.updraft_sdk.api.response.CheckLastVersionResponse;
@@ -27,6 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -89,6 +90,24 @@ public class ApiWrapper {
             }
             checkLastVersionRequest.setVersion(Integer.toString(versionCode));
             return mUpdraftService.checkLastVersion(checkLastVersionRequest);
+        });
+    }
+
+    public Single<Boolean> isFeedbackEnabled() {
+        return Single.defer(() -> {
+            FeedbackEnabledRequest feedbackEnabledRequest = new FeedbackEnabledRequest();
+            feedbackEnabledRequest.setAppKey(mSettings.getAppKey());
+            feedbackEnabledRequest.setSdkKey(mSettings.getSdkKey());
+            return mUpdraftService.isFeedbackEnabled(feedbackEnabledRequest)
+                    .flatMap(feedbackEnabledResponse -> {
+                        if (feedbackEnabledResponse.getErrorCodes() != null && feedbackEnabledResponse.getErrorCodes().size() > 0) {
+                            List<String> errorDescriptions = feedbackEnabledResponse.getErrorDescriptions();
+                            String errorDescription = errorDescriptions == null || errorDescriptions.size() == 0 ? "" : errorDescriptions.get(0);
+                            return Single.error(new ApiException(errorDescription));
+                        } else {
+                            return Single.just(feedbackEnabledResponse.getFeedbackEnabled());
+                        }
+                    });
         });
     }
 

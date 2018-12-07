@@ -39,7 +39,7 @@ Add this line to your dependencies in app-level build.gradle file:
 
 ```
 dependencies {
-    compile 'com.appswithlove.updraftsdk:updraft_sdk:1.0.2'
+    compile 'com.appswithlove.updraftsdk:updraft_sdk:1.0.3'
 }
 ```
 

@@ -19,6 +19,7 @@ public class AppUpdateManager implements LifecycleObserver, UpdraftSdkUi.Listene
 
     private CheckUpdateInteractor mCheckUpdateInteractor;
     private UpdraftSdkUi mUpdraftSdkUi;
+
     private Disposable mCheckUpdateDisposable;
 
     public AppUpdateManager(Application application,

@@ -37,6 +37,11 @@ public class UpdraftSdkUi implements Application.ActivityLifecycleCallbacks {
     private boolean mStartAlertShown = false;
     private boolean mShowStartAlertDialogPending = false;
 
+    private boolean mShowHowToFeedbackDialogPending = false;
+    private boolean mShowFeedbackDisabledDialogPending = false;
+
+    private boolean mIsCurrentlyShowingFeedback = false;
+
     public interface Listener {
 
         void onOkClicked(String url);
@@ -52,8 +57,8 @@ public class UpdraftSdkUi implements Application.ActivityLifecycleCallbacks {
     }
 
     public void showStartAlert() {
-        if (!mSettings.getShowStartAlert())  {
-          return;
+        if (!mSettings.getShowStartAlert()) {
+            return;
         }
         if (!mStartAlertShown) {
             if (mCurrentActivity == null) {
@@ -92,6 +97,34 @@ public class UpdraftSdkUi implements Application.ActivityLifecycleCallbacks {
         builder.show();
     }
 
+    public void showFeedbackDisabledAlert() {
+        if (mCurrentActivity == null) {
+            mShowFeedbackDisabledDialogPending = true;
+            return;
+        }
+        mShowFeedbackDisabledDialogPending = false;
+        AlertDialog.Builder builder = new AlertDialog.Builder(mCurrentActivity);
+        builder.setNegativeButton(R.string.updraft_alert_button_cancel, (dialog, which) -> dialog.dismiss());
+        builder.setCancelable(false);
+        builder.setTitle(R.string.updraft_feedback_alert_feedbackDisabled_title);
+        builder.setMessage(R.string.updraft_feedback_alert_feedbackDisabled_message);
+        builder.show();
+    }
+
+    public void showHowToGiveFeedbackAlert() {
+        if (mCurrentActivity == null) {
+            mShowHowToFeedbackDialogPending = true;
+            return;
+        }
+        mShowHowToFeedbackDialogPending = false;
+        AlertDialog.Builder builder = new AlertDialog.Builder(mCurrentActivity);
+        builder.setNegativeButton(R.string.updraft_alert_button_cancel, (dialog, which) -> dialog.dismiss());
+        builder.setCancelable(false);
+        builder.setTitle(R.string.updraft_feedback_alert_howToGiveFeedback_title);
+        builder.setMessage(R.string.updraft_feedback_alert_howToGiveFeedback_message);
+        builder.show();
+    }
+
     public void openUrl(String url) {
         Uri uri = Uri.parse(url);
         Intent i = new Intent(Intent.ACTION_VIEW, uri);
@@ -118,7 +151,7 @@ public class UpdraftSdkUi implements Application.ActivityLifecycleCallbacks {
                     Intent intent = FeedbackActivity.getIntent(mCurrentActivity, FILENAME);
                     mCurrentActivity.startActivity(intent);
                     mCurrentActivity.overridePendingTransition(0, 0);
-                    activityStarted=true;
+                    activityStarted = true;
                 } catch (IOException e) {
                     if (BuildConfig.DEBUG) {
                         e.printStackTrace();
@@ -130,6 +163,10 @@ public class UpdraftSdkUi implements Application.ActivityLifecycleCallbacks {
         if (!activityStarted) {
             Updraft.getInstance().getShakeDetectorManager().startListening();
         }
+    }
+
+    public boolean isCurrentlyShowingFeedback() {
+        return mIsCurrentlyShowingFeedback;
     }
 
     private void saveBitmap(Bitmap bitmap) throws IOException {
@@ -161,11 +198,29 @@ public class UpdraftSdkUi implements Application.ActivityLifecycleCallbacks {
         if (mShowDialogPending) {
             showAlert(mPendingUrl);
         }
+        if (mShowHowToFeedbackDialogPending) {
+            showHowToGiveFeedbackAlert();
+        }
+        if (mShowFeedbackDisabledDialogPending) {
+            showFeedbackDisabledAlert();
+        }
+        if (activity instanceof FeedbackActivity) {
+            mIsCurrentlyShowingFeedback = true;
+        }
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
+        if (activity instanceof FeedbackActivity) {
+            mIsCurrentlyShowingFeedback = false;
+        }
         mCurrentActivity = null;
+    }
+
+    public void closeFeedback() {
+        if (mCurrentActivity instanceof FeedbackActivity && !mCurrentActivity.isFinishing()) {
+            mCurrentActivity.finish();
+        }
     }
 
     @Override
