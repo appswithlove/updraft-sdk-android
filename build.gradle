@@ -17,6 +17,9 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4'
         classpath 'com.appswithlove.updraft:updraft:1.0.6'
+
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -31,4 +34,28 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'updraft-sdk'
+
+    publishedGroupId = 'com.apsswithlove.updraftsdk'
+    libraryName = 'UpdraftSDK'
+    artifact = 'updraft_sdk'
+
+    libraryDescription = 'Updraft distribution sdk.'
+
+    siteUrl = 'https://github.com/appswithlove/updraft-sdk-android'
+    gitUrl = 'https://github.com/appswithlove/updraft-sdk-android.git'
+
+    libraryVersion = '1.0.3'
+
+    developerId = 'satorikomeiji'
+    developerName = 'Ilia Kuznetcov'
+    developerEmail = 'kuznetcov@appswithlove.com'
+
+    licenseName = 'MIT'
+    licenseUrl = 'https://raw.githubusercontent.com/appswithlove/updraft-sdk-android/master/LICENSE'
+    allLicenses = ["MIT"]
 }
