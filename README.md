@@ -24,13 +24,7 @@ Add the repository into your top-level build.gradle file:
 ```
 allproject {
     repositories {
-        maven {
-            url 'https://artifactory.appswithlove.net/artifactory'
-            credentials {
-                username = "${artifactory_user}"
-                password = "${artifactory_password}"
-            }
-        }
+        jcenter()
     }
 }
 ```
@@ -39,7 +33,7 @@ Add this line to your dependencies in app-level build.gradle file:
 
 ```
 dependencies {
-    compile 'com.appswithlove.updraftsdk:updraft_sdk:1.0.3'
+    implementation 'com.appswithlove.updraftsdk:updraft_sdk:1.0.3'
 }
 ```
 
