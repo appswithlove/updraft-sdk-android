@@ -39,11 +39,11 @@ task clean(type: Delete) {
 
 ext {
     bintrayRepo = 'updraft'
-    bintrayName = 'updraftsdk'
+    bintrayName = 'updraft-sdk'
 
     publishedGroupId = 'com.appswithlove.updraftsdk'
-    libraryName = 'updraftsdk'
-    artifact = 'updraftsdk'
+    libraryName = 'updraft-sdk'
+    artifact = 'updraft-sdk'
 
     libraryDescription = 'Updraft Distribution SDK'
 
