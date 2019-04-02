@@ -14,12 +14,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4'
-        classpath 'com.appswithlove.updraft:updraft:1.0.6'
+        classpath 'com.appswithlove.updraft:updraft:2.1.1'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -29,6 +29,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenLocal()
     }
 }
 
@@ -37,14 +38,14 @@ task clean(type: Delete) {
 }
 
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'updraft-sdk'
+    bintrayRepo = 'updraft'
+    bintrayName = 'updraftsdk'
 
-    publishedGroupId = 'com.apsswithlove.updraftsdk'
-    libraryName = 'UpdraftSDK'
-    artifact = 'updraft_sdk'
+    publishedGroupId = 'com.appswithlove.updraftsdk'
+    libraryName = 'updraftsdk'
+    artifact = 'updraftsdk'
 
-    libraryDescription = 'Updraft distribution sdk.'
+    libraryDescription = 'Updraft Distribution SDK'
 
     siteUrl = 'https://github.com/appswithlove/updraft-sdk-android'
     gitUrl = 'https://github.com/appswithlove/updraft-sdk-android.git'
