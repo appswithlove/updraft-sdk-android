@@ -62,7 +62,8 @@ public class CheckFeedbackEnabledManager implements LifecycleObserver, ShakeDete
                                     mUpdraftSdkUi.showHowToGiveFeedbackAlert();
                                 }
                             }
-                        }
+                        },
+                        Throwable::printStackTrace
                 );
     }
 
