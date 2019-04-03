@@ -1,1 +1,1 @@
-include ':app', ':updraft_sdk'
+include ':app', ':updraft-sdk'
