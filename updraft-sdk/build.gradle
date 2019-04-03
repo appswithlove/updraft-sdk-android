@@ -3,9 +3,9 @@ apply plugin: "com.jfrog.artifactory"
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'base'
 
 def packageName = 'com.appswithlove.updraft'
-def libraryVersion = '1.0.4'
 
 android {
 
@@ -15,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0.4"
+        versionName libraryVersion
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -72,7 +72,7 @@ publishing {
         aar(MavenPublication) {
             groupId packageName
             version = libraryVersion
-            artifactId project.getName()
+            artifactId artifact
 
             // Tell maven to prepare the generated "*.aar" file for publishing
             artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
@@ -200,7 +200,7 @@ bintray {
 }
 
 afterEvaluate {
-    assembleRelease.dependsOn clean
+    assembleRelease.dependsOn(clean)
     tasks.withType(GenerateMavenPom).all {
         it.dependsOn assembleRelease
     }
