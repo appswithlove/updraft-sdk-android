@@ -43,7 +43,7 @@ public class FeedbackFormPresenter {
                                 mView.getEmail(),
                                 FeedbackActivity.SAVED_SCREENSHOT
                         )
-                        .concatMap(progress -> Observable.just(progress).delay(1000, TimeUnit.MILLISECONDS))
+                        //.concatMap(progress -> Observable.just(progress).delay(1000, TimeUnit.MILLISECONDS))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(

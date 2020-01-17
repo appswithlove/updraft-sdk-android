@@ -118,10 +118,9 @@ public class UpdraftSdkUi implements Application.ActivityLifecycleCallbacks {
         }
         mShowHowToFeedbackDialogPending = false;
         AlertDialog.Builder builder = new AlertDialog.Builder(mCurrentActivity);
-        builder.setNegativeButton(R.string.updraft_alert_button_cancel, (dialog, which) -> dialog.dismiss());
-        builder.setCancelable(false);
         builder.setTitle(R.string.updraft_feedback_alert_howToGiveFeedback_title);
         builder.setMessage(R.string.updraft_feedback_alert_howToGiveFeedback_message);
+        builder.setPositiveButton(R.string.updraft_alert_button_ok, (dialog, which) -> dialog.dismiss());
         builder.show();
     }
 
