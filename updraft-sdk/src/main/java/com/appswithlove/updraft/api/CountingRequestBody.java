@@ -1,6 +1,6 @@
 package com.appswithlove.updraft.api;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import com.appswithlove.updraft.BuildConfig;
 import okhttp3.MediaType;
