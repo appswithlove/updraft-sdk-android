@@ -4,13 +4,10 @@ import android.os.Handler;
 import com.appswithlove.updraft.Updraft;
 import com.appswithlove.updraft.api.ApiWrapper;
 import com.appswithlove.updraft.feedback.FeedbackActivity;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import java.util.concurrent.TimeUnit;
 
 public class FeedbackFormPresenter {
 
@@ -67,7 +64,7 @@ public class FeedbackFormPresenter {
         mView.hideProgress();
     }
 
-    private void closeAfterDelay(){
+    private void closeAfterDelay() {
         Handler handler = new Handler();
         handler.postDelayed(
                 () -> mView.closeFeedback(),
