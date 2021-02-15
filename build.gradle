@@ -4,22 +4,14 @@ buildscript {
 
     repositories {
         google()
+        mavenCentral()
+        mavenLocal()
         jcenter()
-        maven {
-            url "${artifactory_contextUrl}" + "/remote-repos"
-            credentials {
-                username = "${artifactory_user}"
-                password = "${artifactory_password}"
-            }
-        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.9.3'
-        classpath 'com.appswithlove.updraft:updraft:2.1.1'
-
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.appswithlove.updraft:updraft:2.1.5-alpha1'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -34,28 +26,4 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-ext {
-    bintrayRepo = 'updraft'
-    bintrayName = 'updraft-sdk'
-
-    publishedGroupId = 'com.appswithlove.updraft'
-    libraryName = 'updraft-sdk'
-    artifact = 'updraft-sdk'
-
-    libraryDescription = 'Updraft Distribution SDK'
-
-    siteUrl = 'https://github.com/appswithlove/updraft-sdk-android'
-    gitUrl = 'https://github.com/appswithlove/updraft-sdk-android.git'
-
-    libraryVersion = '1.0.6'
-
-    developerId = 'satorikomeiji'
-    developerName = 'Ilia Kuznetcov'
-    developerEmail = 'kuznetcov@appswithlove.com'
-
-    licenseName = 'MIT'
-    licenseUrl = 'https://raw.githubusercontent.com/appswithlove/updraft-sdk-android/master/LICENSE'
-    allLicenses = ["MIT"]
 }
