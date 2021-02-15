@@ -24,7 +24,7 @@ Add the repository into your top-level build.gradle file:
 ```
 allproject {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 ```
@@ -33,7 +33,7 @@ Add this line to your dependencies in app-level build.gradle file:
 
 ```
 dependencies {
-    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.6'
+    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.7'
 }
 ```
 

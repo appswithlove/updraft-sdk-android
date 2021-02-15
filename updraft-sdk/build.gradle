@@ -59,13 +59,6 @@ dependencies {
 group = GROUP
 version = VERSION_NAME
 
-afterEvaluate {
-    assembleRelease.dependsOn(clean)
-    tasks.withType(GenerateMavenPom).all {
-        it.dependsOn assembleRelease
-    }
-}
-
 mavenPublish {
     targets {
         // Modify the existing uploadArchives task
