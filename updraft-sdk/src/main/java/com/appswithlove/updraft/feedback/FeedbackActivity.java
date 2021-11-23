@@ -3,8 +3,10 @@ package com.appswithlove.updraft.feedback;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.appswithlove.updraft.R;
 import com.appswithlove.updraft.Updraft;
 import com.appswithlove.updraft.feedback.drawing.UpdraftDrawingFragment;

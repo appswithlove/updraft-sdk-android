@@ -1,20 +1,22 @@
 package com.appswithlove.updraft.manager;
 
+import static android.content.Context.SENSOR_SERVICE;
+import static com.appswithlove.updraft.Updraft.UPDRAFT_TAG;
+
 import android.app.Application;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.OnLifecycleEvent;
-import android.arch.lifecycle.ProcessLifecycleOwner;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
+
 import com.appswithlove.updraft.Settings;
 import com.appswithlove.updraft.presentation.UpdraftSdkUi;
-
-import static android.content.Context.SENSOR_SERVICE;
-import static com.appswithlove.updraft.Updraft.UPDRAFT_TAG;
 
 public class ShakeDetectorManager implements LifecycleObserver, SensorEventListener {
 

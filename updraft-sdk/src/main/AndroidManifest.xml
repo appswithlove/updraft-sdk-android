@@ -6,6 +6,7 @@
     <application>
         <activity
             android:name="com.appswithlove.updraft.feedback.FeedbackActivity"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.Transparent"
+            android:exported="true" />
     </application>
 </manifest>

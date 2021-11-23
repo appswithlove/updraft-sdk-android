@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/updraft_feedback_title"
+            android:text="@string/feedback.title"
             android:textColor="@android:color/white" />
 
         <ImageView

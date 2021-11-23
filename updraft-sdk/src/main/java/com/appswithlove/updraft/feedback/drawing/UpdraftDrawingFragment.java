@@ -1,5 +1,7 @@
 package com.appswithlove.updraft.feedback.drawing;
 
+import static android.view.View.GONE;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,8 +10,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +17,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+
 import com.appswithlove.updraft.R;
 import com.appswithlove.updraft.feedback.FeedbackActivity;
 import com.appswithlove.updraft.feedback.FeedbackRootContainer;
@@ -24,8 +28,6 @@ import com.rm.freedrawview.FreeDrawView;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
-import static android.view.View.GONE;
 
 public class UpdraftDrawingFragment extends Fragment {
 
@@ -151,7 +153,7 @@ public class UpdraftDrawingFragment extends Fragment {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getContext(), R.string.GENERAL_ERROR, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.global_error, Toast.LENGTH_SHORT).show();
         }
     }
 }

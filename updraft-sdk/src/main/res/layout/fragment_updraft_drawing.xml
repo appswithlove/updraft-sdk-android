@@ -35,7 +35,7 @@
             android:background="@color/charcoal_grey_70">
 
             <TextView
-                android:text="@string/updraft_feedback_drawExplanation"
+                android:text="@string/feedback.drawDescription"
                 android:layout_width="wrap_content"
                 style="@style/UpdraftDrawSomethingHereText"
                 android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="@dimen/updraft_drawing_container_buttons_margin_end"
-            android:text="@string/updraft_feedback_button_next" />
+            android:text="@string/button.next" />
 
     </LinearLayout>
 </LinearLayout>

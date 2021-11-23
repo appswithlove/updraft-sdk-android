@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +18,7 @@
             android:paddingStart="@dimen/updraft_feedback_screen_padding_start"
             android:paddingTop="@dimen/updraft_feedback_screen_padding_top">
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/updraft_feedback_type_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/updraft_feedback_description_input_margin_top"
                 android:gravity="start|top"
-                android:hint="@string/updraft_feedback_textField_description_placeholder"
+                android:hint="@string/feedback.description.placeholder"
                 android:inputType="textMultiLine"
                 android:lines="6"
                 android:minLines="6" />
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/updraft_feedback_email_input_margin_top"
-                android:hint="@string/updraft_feedback_textField_email_placeholder"
+                android:hint="@string/feedback.email.placeholder"
                 android:inputType="textEmailAddress" />
 
             <FrameLayout
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|bottom"
-                    android:text="@string/updraft_feedback_button_previous" />
+                    android:text="@string/button.previous" />
 
                 <Button
                     android:id="@+id/updraft_feedback_send_button"
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
-                    android:text="@string/updraft_feedback_button_sendFeedback"
+                    android:text="@string/button.sendFeedback"
                     android:textAllCaps="false" />
 
             </FrameLayout>
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/updraft_feedback_progress_text_margin_bottom"
-                    android:text="@string/updraft_feedback_send_inProgress" />
+                    android:text="@string/feedback.send.inProgress" />
 
                 <ProgressBar
                     android:id="@+id/updraft_feedback_progress_bar"
@@ -122,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
-                android:text="@string/updraft_alert_button_cancel" />
+                android:text="@string/button.cancel" />
         </FrameLayout>
     </FrameLayout>
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>
