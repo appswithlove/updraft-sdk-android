@@ -4,6 +4,7 @@ plugins {
     id 'maven-publish'
     id 'base'
     id 'com.appswithlove.loco'
+    id 'com.vanniktech.maven.publish'
 }
 
 def packageName = 'com.appswithlove.updraft'
@@ -29,29 +30,6 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
-    }
-}
-
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId packageName
-            version = libraryVersion
-            artifactId artifact
-
-            // Tell maven to prepare the generated "*.aar" file for publishing
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-                configurations.api.allDependencies.each { dependency ->
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', dependency.group)
-                    dependencyNode.appendNode('artifactId', dependency.name)
-                    dependencyNode.appendNode('version', dependency.version)
-                }
-            }
-        }
     }
 }
 
@@ -86,32 +64,16 @@ dependencies {
 group = publishedGroupId
 version = libraryVersion
 
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
-
-task javadoc(type: Javadoc) {
-    options.encoding = 'UTF-8'
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-afterEvaluate {
-    assembleRelease.dependsOn(clean)
-    tasks.withType(GenerateMavenPom).all {
-        it.dependsOn assembleRelease
+mavenPublish {
+    targets {
+        // Modify the existing uploadArchives task
+        uploadArchives {
+            releaseRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            snapshotRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            // repositoryUsername = // This defaults to either the SONATYPE_NEXUS_USERNAME Gradle property or the system environment variable.
+            // repositoryPassword =  // This defaults to either the SONATYPE_NEXUS_PASSWORD Gradle property or the system environment variable.
+            signing = true
+        }
     }
 }
 
