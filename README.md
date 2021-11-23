@@ -1,4 +1,5 @@
 ![Updraft: Mobile App Distribution](updraft.png)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.appswithlove.updraft/updraft-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.appswithlove.updraft/updraft-sdk)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/appswithlove/updraft-sdk-ios/master/LICENSE)
 [![Twitter](https://img.shields.io/badge/twitter-@GetUpdraft-blue.svg?style=flat)](https://twitter.com/GetUpdraft)
 
