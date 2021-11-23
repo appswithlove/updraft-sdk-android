@@ -17,9 +17,9 @@
     <string name="feedback.type.design">Design</string>
     <string name="feedback.type.feedback">Feedback</string>
     <string name="feedback.type.title">Type of Feedback</string>
-    <string name="feedbackDialog.description">Take a screenshot to give a feedback or report a bug.</string>
+    <string name="feedbackDialog.description">Shake the device to give a feedback or report a bug.</string>
     <string name="feedbackDialog.title">Give Feedback</string>
-    <string name="feedbackDisabled.description">Feedback functionality has been disabled. You can no longer send a feedback or report a bug by taking a screenshot.</string>
+    <string name="feedbackDisabled.description">Feedback functionality has been disabled. You can no longer send a feedback or report a bug by shaking the device.</string>
     <string name="feedbackDisabled.title">Feedback Disabled</string>
     <string name="global.error">Error</string>
     <string name="updateAvailable.description">You will be redirected to download the new version of the app</string>
