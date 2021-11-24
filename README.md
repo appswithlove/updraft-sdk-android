@@ -41,23 +41,21 @@ dependencies {
 ## Setup
 
 ```
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Settings settings = new Settings();
-        settings.setAppKey(YOUR_APP_KEY);
-        settings.setSdkKey(YOUR_SDK_KEY);
-        //Should app be in store
-        settings.setStoreRelease(false);
-        //Optional base url for updraft
-        settings.setBaseUrl(Settings.BASE_URL_STAGING);
-        //Optional set log level
-        settings.setLogLevel(Settings.LOG_LEVEL_DEBUG);
-        //Optional set if should show start alert
-        settings.setShowStartAlert(false);
-        Updraft.initialize(this, settings);
-        Updraft.getInstance().start();
-    }
+override fun onCreate() {
+    super.onCreate()
+    val settings = Settings()
+    settings.appKey = APP_KEY
+    settings.sdkKey = SDK_KEY
+    //Should app be in store
+    settings.isStoreRelease = false
+    //Optional base url for updraft
+    settings.baseUrl = Settings.BASE_URL_STAGING;
+    //Optional set if should show start alert
+    settings.logLevel = Settings.LOG_LEVEL_DEBUG
+    //Optional set if should show start alert
+    settings.showFeedbackAlert = true
+    Updraft.initialize(this, settings)
+    Updraft.getInstance()?.start()
 }
 ```
 ### Parameters
