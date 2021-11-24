@@ -34,7 +34,7 @@ Add this line to your dependencies in app-level build.gradle file:
 
 ```
 dependencies {
-    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.8'
+    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.9'
 }
 ```
 
