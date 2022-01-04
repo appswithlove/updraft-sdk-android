@@ -25,7 +25,7 @@ Add the repository into your top-level build.gradle file:
 ```
 allproject {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 ```
