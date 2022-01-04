@@ -8,7 +8,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:7.0.4'
         classpath 'com.appswithlove.updraft:updraft:2.1.7'
 
         classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.5.0'
@@ -25,7 +25,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
+        maven { url 'https://maven.scijava.org/content/repositories/public/' }
     }
 }
 
@@ -46,11 +46,11 @@ ext {
     siteUrl = 'https://github.com/appswithlove/updraft-sdk-android'
     gitUrl = 'https://github.com/appswithlove/updraft-sdk-android.git'
 
-    libraryVersion = '1.0.9'
+    libraryVersion = '1.0.11'
 
-    developerId = 'satorikomeiji'
-    developerName = 'Ilia Kuznetcov'
-    developerEmail = 'kuznetcov@appswithlove.com'
+    developerId = 'yannickpulver'
+    developerName = 'Yannick Pulver'
+    developerEmail = 'yannick@appswithlove.com'
 
     licenseName = 'MIT'
     licenseUrl = 'https://raw.githubusercontent.com/appswithlove/updraft-sdk-android/master/LICENSE'
