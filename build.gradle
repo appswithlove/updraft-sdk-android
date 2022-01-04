@@ -46,7 +46,7 @@ ext {
     siteUrl = 'https://github.com/appswithlove/updraft-sdk-android'
     gitUrl = 'https://github.com/appswithlove/updraft-sdk-android.git'
 
-    libraryVersion = '1.0.11'
+    libraryVersion = '1.0.12'
 
     developerId = 'yannickpulver'
     developerName = 'Yannick Pulver'

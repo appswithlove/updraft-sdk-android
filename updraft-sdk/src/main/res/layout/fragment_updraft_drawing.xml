@@ -35,7 +35,7 @@
             android:background="@color/charcoal_grey_70">
 
             <TextView
-                android:text="@string/feedback.drawDescription"
+                android:text="@string/updraft.feedback.drawDescription"
                 android:layout_width="wrap_content"
                 style="@style/UpdraftDrawSomethingHereText"
                 android:layout_height="wrap_content"
@@ -107,10 +107,12 @@
             android:id="@+id/updraft_feedback_next_button"
             style="@style/UpdraftBackAndPreviousButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
             android:layout_gravity="end|center_vertical"
-            android:layout_marginEnd="@dimen/updraft_drawing_container_buttons_margin_end"
-            android:text="@string/button.next" />
+            android:paddingEnd="@dimen/updraft_drawing_container_buttons_margin_end"
+            android:paddingStart="16dp"
+            android:text="@string/updraft.button.next" />
 
     </LinearLayout>
 </LinearLayout>

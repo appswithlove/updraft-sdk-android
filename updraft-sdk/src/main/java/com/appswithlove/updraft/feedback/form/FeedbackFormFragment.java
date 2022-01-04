@@ -77,10 +77,10 @@ public class FeedbackFormFragment extends Fragment implements FeedbackFormContra
         sendButton.setEnabled(false);
         mSpinner = view.findViewById(R.id.updraft_feedback_type_spinner);
         List<FeedbackChoice> feedbackChoices = new ArrayList<>();
-        feedbackChoices.add(new FeedbackChoice(FeedbackChoice.FEEDBACK_TYPE_NOT_SELECTED, getString(R.string.feedback_type_title), true));
-        feedbackChoices.add(new FeedbackChoice(FeedbackChoice.FEEDBACK_TYPE_DESIGN, getString(R.string.feedback_type_design), false));
-        feedbackChoices.add(new FeedbackChoice(FeedbackChoice.FEEDBACK_TYPE_FEEDBACK, getString(R.string.feedback_type_feedback), false));
-        feedbackChoices.add(new FeedbackChoice(FeedbackChoice.FEEDBACK_TYPE_BUG, getString(R.string.feedback_type_bug), false));
+        feedbackChoices.add(new FeedbackChoice(FeedbackChoice.FEEDBACK_TYPE_NOT_SELECTED, getString(R.string.updraft_feedback_type_title), true));
+        feedbackChoices.add(new FeedbackChoice(FeedbackChoice.FEEDBACK_TYPE_DESIGN, getString(R.string.updraft_feedback_type_design), false));
+        feedbackChoices.add(new FeedbackChoice(FeedbackChoice.FEEDBACK_TYPE_FEEDBACK, getString(R.string.updraft_feedback_type_feedback), false));
+        feedbackChoices.add(new FeedbackChoice(FeedbackChoice.FEEDBACK_TYPE_BUG, getString(R.string.updraft_feedback_type_bug), false));
         FeedbackFormTypeSpinnerAdapter adapter = new FeedbackFormTypeSpinnerAdapter(getContext(), feedbackChoices);
         mSpinner.setAdapter(adapter);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -142,22 +142,22 @@ public class FeedbackFormFragment extends Fragment implements FeedbackFormContra
 
     @Override
     public void showSuccessMessage() {
-        mProgressTitle.setText(R.string.feedback_send_success);
+        mProgressTitle.setText(R.string.updraft_feedback_send_success);
         mProgressBar.setVisibility(VISIBLE);
         mProgressCancelButton.setVisibility(GONE);
     }
 
     @Override
     public void showErrorMessage(Throwable t) {
-        mProgressTitle.setText(R.string.feedback_send_failure_title);
+        mProgressTitle.setText(R.string.updraft_feedback_send_failure_title);
         mProgressBar.setVisibility(GONE);
-        mProgressText.setText(R.string.feedback_send_failure_description);
+        mProgressText.setText(R.string.updraft_feedback_send_failure_description);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void updateProgress(double progress) {
-        mProgressTitle.setText(R.string.feedback_send_inProgress);
+        mProgressTitle.setText(R.string.updraft_feedback_send_inProgress);
         mProgressBar.setVisibility(VISIBLE);
         mProgressBar.setProgress((int) (progress * 100));
         mProgressText.setText(Integer.toString((int) (progress * 100)) + "%");

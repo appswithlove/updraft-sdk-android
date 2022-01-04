@@ -52,10 +52,10 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
             }
             mShowStartAlertDialogPending = false
             val builder = AlertDialog.Builder(mCurrentActivity)
-            builder.setTitle(R.string.feedbackDialog_title)
-            builder.setMessage(R.string.feedbackDialog_description)
+            builder.setTitle(R.string.updraft_feedbackDialog_title)
+            builder.setMessage(R.string.updraft_feedbackDialog_description)
             builder.setCancelable(true)
-            builder.setPositiveButton(R.string.button_ok) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
+            builder.setPositiveButton(R.string.updraft_button_ok) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
             builder.show()
             mFeedbackAlertShown = true
         }
@@ -80,10 +80,10 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
                 mListener?.onOkClicked(url)
             }
         }
-        builder.setNegativeButton(R.string.button_cancel) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
+        builder.setNegativeButton(R.string.updraft_button_cancel) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
         builder.setCancelable(false)
-        builder.setTitle(R.string.updateAvailable_title)
-        builder.setMessage(R.string.updateAvailable_description)
+        builder.setTitle(R.string.updraft_updateAvailable_title)
+        builder.setMessage(R.string.updraft_updateAvailable_description)
         builder.show()
         mUpdateAlertShown = true
     }
@@ -95,10 +95,10 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
         }
         mShowFeedbackDisabledDialogPending = false
         val builder = AlertDialog.Builder(mCurrentActivity)
-        builder.setNegativeButton(R.string.button_cancel) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
+        builder.setNegativeButton(R.string.updraft_button_cancel) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
         builder.setCancelable(false)
-        builder.setTitle(R.string.feedbackDisabled_title)
-        builder.setMessage(R.string.feedbackDisabled_description)
+        builder.setTitle(R.string.updraft_feedbackDisabled_title)
+        builder.setMessage(R.string.updraft_feedbackDisabled_description)
         builder.show()
     }
 
@@ -109,9 +109,9 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
         }
         mShowHowToFeedbackDialogPending = false
         val builder = AlertDialog.Builder(mCurrentActivity)
-        builder.setTitle(R.string.feedbackDialog_title)
-        builder.setMessage(R.string.feedbackDialog_description)
-        builder.setPositiveButton(R.string.button_ok) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
+        builder.setTitle(R.string.updraft_feedbackDialog_title)
+        builder.setMessage(R.string.updraft_feedbackDialog_description)
+        builder.setPositiveButton(R.string.updraft_button_ok) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
         builder.show()
     }
 
@@ -146,7 +146,7 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
                     if (BuildConfig.DEBUG) {
                         e.printStackTrace()
                     }
-                    Toast.makeText(mCurrentActivity, R.string.global_error, Toast.LENGTH_SHORT)
+                    Toast.makeText(mCurrentActivity, R.string.updraft_global_error, Toast.LENGTH_SHORT)
                         .show()
                 }
             }

@@ -153,7 +153,7 @@ public class UpdraftDrawingFragment extends Fragment {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getContext(), R.string.global_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.updraft_global_error, Toast.LENGTH_SHORT).show();
         }
     }
 }
