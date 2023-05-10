@@ -7,15 +7,16 @@ plugins {
     id 'com.vanniktech.maven.publish'
 }
 
-def packageName = 'com.appswithlove.updraft'
+
+group GROUP
+version VERSION_NAME
 
 android {
-
-    compileSdkVersion 33
+    compileSdk 33
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdk 19
+        targetSdk 33
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -62,28 +63,21 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-group = publishedGroupId
-version = libraryVersion
+import com.vanniktech.maven.publish.SonatypeHost
 
-mavenPublish {
-    targets {
-        // Modify the existing uploadArchives task
-        uploadArchives {
-            releaseRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            snapshotRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            // repositoryUsername = // This defaults to either the SONATYPE_NEXUS_USERNAME Gradle property or the system environment variable.
-            // repositoryPassword =  // This defaults to either the SONATYPE_NEXUS_PASSWORD Gradle property or the system environment variable.
-            signing = true
-        }
-    }
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.DEFAULT)
+    signAllPublications()
 }
 
 Loco {
-    apiKey = 'sOLd6p87EQ9zFoOeI8ytGBvGhKNIFo4f'
-    lang = ['en', 'de']
-    defLang = 'en'
-    resDir = "$projectDir/src/main/res"
-    fallbackLang = 'en'
-    orderByAssetId = true
-    hideComments = true
+    config {
+        apiKey = 'sOLd6p87EQ9zFoOeI8ytGBvGhKNIFo4f'
+        lang = ['en', 'de']
+        defLang = 'en'
+        resDir = "$projectDir/src/main/res"
+        fallbackLang = 'en'
+        orderByAssetId = true
+        hideComments = true
+    }
 }

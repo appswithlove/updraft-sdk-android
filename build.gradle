@@ -9,15 +9,20 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath 'com.appswithlove.updraft:updraft:2.2.1'
-        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.5.0'
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
+        classpath 'com.appswithlove.updraft:updraft:2.2.2'
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.7.20'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.appswithlove.loco:loco:0.2.11'
+        classpath 'com.appswithlove.loco:loco:0.3.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+}
+
+plugins {
+    id "com.vanniktech.maven.publish" version "0.24.0"
+    id 'com.github.kt3k.coveralls' version '2.4.0'
+    id 'signing'
 }
 
 allprojects {
@@ -26,32 +31,4 @@ allprojects {
         mavenCentral()
         maven { url 'https://maven.scijava.org/content/repositories/public/' }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-ext {
-    bintrayRepo = 'updraft'
-    bintrayName = 'updraft-sdk'
-
-    publishedGroupId = 'com.appswithlove.updraft'
-    libraryName = 'updraft-sdk'
-    artifact = 'updraft-sdk'
-
-    libraryDescription = 'Updraft Distribution SDK'
-
-    siteUrl = 'https://github.com/appswithlove/updraft-sdk-android'
-    gitUrl = 'https://github.com/appswithlove/updraft-sdk-android.git'
-
-    libraryVersion = '1.0.13'
-
-    developerId = 'yannickpulver'
-    developerName = 'Yannick Pulver'
-    developerEmail = 'yannick@appswithlove.com'
-
-    licenseName = 'MIT'
-    licenseUrl = 'https://raw.githubusercontent.com/appswithlove/updraft-sdk-android/master/LICENSE'
-    allLicenses = ["MIT"]
 }

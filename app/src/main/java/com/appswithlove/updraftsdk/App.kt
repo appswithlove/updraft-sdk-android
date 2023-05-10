@@ -17,8 +17,8 @@ class App : Application() {
             sdkKey = SDK_KEY
             isStoreRelease = false
             logLevel = Settings.LOG_LEVEL_DEBUG
-            showFeedbackAlert = true
-            feedbackEnabled = false
+            showFeedbackAlert = false
+            feedbackEnabled = true
         }
 
         Updraft.initialize(this, settings)

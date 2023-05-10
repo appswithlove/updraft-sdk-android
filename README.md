@@ -36,7 +36,7 @@ Add this line to your dependencies in app-level build.gradle file:
 
 ```
 dependencies {
-    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.12'
+    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.14'
 }
 ```
 
@@ -99,3 +99,7 @@ Default level: <b>LOG_LEVEL_ERROR</b> => Only warnings and errors will be printe
 ## Local Development
 
 In order to locally develop this plugin, the sample project can be used for easy testing. Additionally, the gradle task `install` allows to install the current version to Maven Local.
+
+## Release
+
+In order to release a new version of this plugin, create a new release on GitHub and the [pipeline](.github/workflows/publish.yml) will automatically publish the new version to Maven Central.
