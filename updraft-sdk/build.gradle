@@ -12,11 +12,11 @@ group GROUP
 version VERSION_NAME
 
 android {
-    compileSdk 33
+    compileSdkVersion 33
 
     defaultConfig {
-        minSdk 19
-        targetSdk 33
+        minSdkVersion 19
+        targetSdkVersion 33
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
