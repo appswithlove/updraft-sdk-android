@@ -12,7 +12,7 @@ import com.appswithlove.updraft.presentation.UpdraftSdkUi
 /**
  * Created by satori on 3/27/18.
  */
-class Updraft private constructor(application: Application, settings: Settings) {
+class Updraft private constructor(application: Application, private val settings: Settings) {
     private val mAppUpdateManager: AppUpdateManager
     val shakeDetectorManager: ShakeDetectorManager
     private val mCheckFeedbackEnabledManager: CheckFeedbackEnabledManager
@@ -20,7 +20,9 @@ class Updraft private constructor(application: Application, settings: Settings) 
 
     fun start() {
         mAppUpdateManager.start()
-        shakeDetectorManager.start()
+        if (settings.feedbackEnabled) {
+            shakeDetectorManager.start()
+        }
         mCheckFeedbackEnabledManager.start()
     }
 

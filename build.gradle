@@ -1,14 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.6.0'
+    ext.kotlin_version = '1.6.21'
 
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath 'com.appswithlove.updraft:updraft:2.1.7'
 
         classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.5.0'
@@ -46,7 +46,7 @@ ext {
     siteUrl = 'https://github.com/appswithlove/updraft-sdk-android'
     gitUrl = 'https://github.com/appswithlove/updraft-sdk-android.git'
 
-    libraryVersion = '1.0.12'
+    libraryVersion = '1.0.13'
 
     developerId = 'yannickpulver'
     developerName = 'Yannick Pulver'

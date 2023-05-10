@@ -12,12 +12,15 @@ import com.appswithlove.updraftsdk.Keys.SDK_KEY
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        val settings = Settings()
-        settings.appKey = APP_KEY
-        settings.sdkKey = SDK_KEY
-        settings.isStoreRelease = false
-        settings.logLevel = Settings.LOG_LEVEL_DEBUG
-        settings.showFeedbackAlert = true
+        val settings = Settings().apply {
+            appKey = APP_KEY
+            sdkKey = SDK_KEY
+            isStoreRelease = false
+            logLevel = Settings.LOG_LEVEL_DEBUG
+            showFeedbackAlert = true
+            feedbackEnabled = false
+        }
+
         Updraft.initialize(this, settings)
         Updraft.getInstance()?.start()
     }
