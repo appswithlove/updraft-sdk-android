@@ -42,7 +42,7 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
     }
 
     fun showFeedbackAlert() {
-        if (!mSettings.showFeedbackAlert) {
+        if (!mSettings.showFeedbackAlert || !mSettings.feedbackEnabled) {
             return
         }
         if (!mFeedbackAlertShown) {

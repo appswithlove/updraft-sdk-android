@@ -10,6 +10,7 @@ class Settings {
     var baseUrl = BASE_URL_PROD
     var logLevel = LOG_LEVEL_ERROR
     var showFeedbackAlert = false
+    var feedbackEnabled = true // force disabling feedback if needed
     fun shouldShowErrors(): Boolean {
         return logLevel == LOG_LEVEL_DEBUG || logLevel == LOG_LEVEL_ERROR
     }
