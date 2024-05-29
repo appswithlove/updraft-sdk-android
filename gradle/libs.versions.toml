@@ -18,6 +18,8 @@ rxandroid = "2.0.2"
 rxjava = "2.1.12"
 updraft = "2.2.4"
 kotlin = "1.9.23"
+vanniktechMavenPublish = "0.24.0"
+coveralls = "2.4.0"
 
 [libraries]
 adapter-rxjava2 = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofit" }
@@ -47,5 +49,9 @@ updraft = { module = "com.appswithlove.updraft:updraft", version.ref = "updraft"
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "gradle" }
+androidLibrary = { id = "com.android.library", version.ref = "gradle" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 updraft = { id = "com.appswithlove.updraft", version.ref = "updraft" }
+vanniktechMavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
+coveralls = { id = "com.github.kt3k.coveralls", version.ref = "coveralls" }
+loco = { id = "com.appswithlove.loco", version.ref = "loco" }

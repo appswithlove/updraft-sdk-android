@@ -1,6 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'com.appswithlove.updraft'
+plugins {
+    alias libs.plugins.androidApplication
+    alias libs.plugins.kotlinAndroid
+    alias libs.plugins.updraft
+}
 
 android {
     namespace "com.appswithlove.updraftsdk"
