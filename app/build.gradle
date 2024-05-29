@@ -50,7 +50,7 @@ android {
     }
 
     updraft {
-        urls['Release'] = "${updraft_uploadUrl}"
+        urls['Release'] = project.hasProperty('updraft_uploadUrl') ? "${updraft_uploadUrl}" : ""
     }
 }
 
