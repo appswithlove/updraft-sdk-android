@@ -9,7 +9,7 @@ gradle = "8.2.2"
 ink = "1.0.0"
 lifecycleExtensions = "2.0.0"
 lifecycleViewmodelKtx = "2.6.1"
-loco = "0.3.0"
+loco = "0.3.1"
 loggingInterceptor = "3.10.0"
 material = "1.9.0"
 multidex = "1.0.3"
@@ -44,7 +44,7 @@ rxandroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxandroi
 rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
 tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-loco = { module = "com.appswithlove.loco:loco", version.ref = "loco" }
+loco = { module = "com.appswithlove.loco:loco", version = "0.3.1" }
 updraft = { module = "com.appswithlove.updraft:updraft", version.ref = "updraft" }
 
 [plugins]

@@ -19,6 +19,7 @@ android {
         targetSdkVersion 34
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        multiDexEnabled true
     }
 
     buildTypes {
