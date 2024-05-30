@@ -1,25 +1,25 @@
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
+    alias libs.plugins.androidLibrary
+    alias libs.plugins.kotlinAndroid
+    alias libs.plugins.loco
+    alias libs.plugins.vanniktechMavenPublish
     id 'maven-publish'
     id 'base'
-    id 'com.appswithlove.loco'
-    id 'com.vanniktech.maven.publish'
 }
-
 
 group GROUP
 version VERSION_NAME
 
 android {
-    compileSdkVersion 33
+    namespace "com.appswithlove.updraft"
+    compileSdk 34
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 33
+        targetSdkVersion 34
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -28,35 +28,46 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api 'androidx.appcompat:appcompat:1.0.0'
-    implementation "com.google.android.material:material:1.4.0"
+    implementation libs.appcompat
+    implementation libs.material
 
-    api 'com.squareup.retrofit2:retrofit:2.4.0'
-    api 'com.squareup.retrofit2:converter-gson:2.4.0'
-    api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    api "io.reactivex.rxjava2:rxjava:2.1.12"
-    api 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation libs.retrofit
+    implementation libs.converter.gson
+    implementation libs.adapter.rxjava2
+    implementation libs.logging.interceptor
+    implementation libs.rxjava
+    implementation libs.rxandroid
 
-    api 'com.simplify:ink:1.0.0'
+    implementation libs.ink
 
-    api 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    api 'androidx.lifecycle:lifecycle-runtime:2.0.0'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    implementation libs.lifecycle.extensions
+    implementation libs.lifecycle.runtime
+    annotationProcessor libs.lifecycle.compiler
 
-    implementation 'com.rm:freedrawview:1.1.2'
-    implementation "androidx.core:core-ktx:1.7.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation libs.freedrawview
+    implementation libs.core.ktx
+    implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.kotlin.stdlib.jdk7
+
+    implementation libs.multidex
 }
 
 import com.vanniktech.maven.publish.SonatypeHost
