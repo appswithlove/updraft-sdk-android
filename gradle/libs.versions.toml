@@ -4,7 +4,7 @@ appcompat = "1.7.0"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
 dokkaGradlePlugin = "1.7.20"
-gradle = "8.2.2"
+gradle = "8.3.2"
 ink = "1.0.0"
 lifecycleExtensions = "2.2.0"
 lifecycleViewmodelKtx = "2.8.2"
@@ -45,6 +45,7 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 loco = { module = "com.appswithlove.loco:loco", version = "0.3.1" }
 updraft = { module = "com.appswithlove.updraft:updraft", version.ref = "updraft" }
 androidx-startup = { module = "androidx.startup:startup-runtime", version = "1.1.1" }
+androidx-annotation = { module = "androidx.annotation:annotation", version = "1.8.0" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "gradle" }
