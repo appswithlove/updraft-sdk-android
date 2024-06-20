@@ -6,6 +6,7 @@ import com.appswithlove.updraft.interactor.CheckFeedbackEnabledInteractor
 import com.appswithlove.updraft.interactor.CheckUpdateInteractor
 import com.appswithlove.updraft.manager.AppUpdateManager
 import com.appswithlove.updraft.manager.CheckFeedbackEnabledManager
+import com.appswithlove.updraft.manager.CurrentActivityManger
 import com.appswithlove.updraft.manager.ShakeDetectorManager
 import com.appswithlove.updraft.presentation.UpdraftSdkUi
 
@@ -28,7 +29,7 @@ class Updraft private constructor(application: Application, private val settings
 
     init {
         val checkUpdateInteractor = CheckUpdateInteractor(apiWrapper)
-        val updraftSdkUi = UpdraftSdkUi(application, settings)
+        val updraftSdkUi = UpdraftSdkUi(CurrentActivityManger.INSTANCE, settings)
         mAppUpdateManager = AppUpdateManager(checkUpdateInteractor, updraftSdkUi)
         val checkFeedbackEnabledInteractor = CheckFeedbackEnabledInteractor(
             apiWrapper, application

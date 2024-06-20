@@ -61,6 +61,7 @@ dependencies {
     implementation libs.lifecycle.extensions
     implementation libs.lifecycle.runtime
     annotationProcessor libs.lifecycle.compiler
+    implementation libs.androidx.startup
 
     implementation libs.freedrawview
     implementation libs.core.ktx

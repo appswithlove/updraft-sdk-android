@@ -2,27 +2,27 @@ package com.appswithlove.updraft.presentation
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Application
-import android.app.Application.ActivityLifecycleCallbacks
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Bundle
 import android.widget.Toast
 import com.appswithlove.updraft.BuildConfig
 import com.appswithlove.updraft.R
 import com.appswithlove.updraft.Settings
 import com.appswithlove.updraft.Updraft.Companion.getInstance
 import com.appswithlove.updraft.feedback.FeedbackActivity
+import com.appswithlove.updraft.manager.CurrentActivityManger
 import java.io.IOException
 
 /**
  * Created by satori on 3/27/18.
  */
-class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
-    ActivityLifecycleCallbacks {
+class UpdraftSdkUi(
+    currentActivityManger: CurrentActivityManger,
+    private val mSettings: Settings,
+) : CurrentActivityManger.CurrentActivityListener {
     private var mCurrentActivity: Activity? = null
     private var mShowDialogPending = false
     private var mPendingUrl: String? = null
@@ -36,6 +36,9 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
     var isCurrentlyShowingFeedback = false
         private set
 
+    init {
+        currentActivityManger.addListener(this)
+    }
 
     fun setListener(listener: Listener?) {
         mListener = listener
@@ -167,8 +170,15 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
         bitmap.recycle()
     }
 
-    override fun onActivityCreated(activity: Activity, bundle: Bundle?) {}
-    override fun onActivityStarted(activity: Activity) {}
+
+    fun closeFeedback() {
+        mCurrentActivity.apply {
+            if (this is FeedbackActivity && !this.isFinishing()) {
+                this.finish()
+            }
+        }
+    }
+
     override fun onActivityResumed(activity: Activity) {
         mCurrentActivity = activity
         if (mShowStartAlertDialogPending) {
@@ -195,25 +205,9 @@ class UpdraftSdkUi(application: Application, private val mSettings: Settings) :
         mCurrentActivity = null
     }
 
-    fun closeFeedback() {
-        mCurrentActivity.apply {
-            if (this is FeedbackActivity && !this.isFinishing()) {
-                this.finish()
-            }
-        }
-    }
-
-    override fun onActivityStopped(activity: Activity) {}
-    override fun onActivitySaveInstanceState(activity: Activity, bundle: Bundle) {}
-    override fun onActivityDestroyed(activity: Activity) {}
-
     companion object {
         private const val TAG = "UpdraftSdkUi"
         private const val FILENAME = "UPDRAFT_SCREENSHOT.png"
-    }
-
-    init {
-        application.registerActivityLifecycleCallbacks(this)
     }
 
     interface Listener {
