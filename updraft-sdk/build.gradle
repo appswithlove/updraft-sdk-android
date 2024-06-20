@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':freedrawview')
 
     implementation libs.appcompat
     implementation libs.material
@@ -63,7 +64,6 @@ dependencies {
     annotationProcessor libs.lifecycle.compiler
     implementation libs.androidx.startup
 
-    implementation libs.freedrawview
     implementation libs.core.ktx
     implementation libs.lifecycle.viewmodel.ktx
     implementation libs.kotlin.stdlib.jdk7

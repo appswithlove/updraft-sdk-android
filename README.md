@@ -20,18 +20,6 @@ Updraft is built by App Agencies [Apps with love](https://appswithlove.com/) and
 
 ## Installation
 
-Add the repository into your top-level build.gradle file:
-
-```
-allproject {
-    repositories {
-        mavenCentral()
-        // needed for an old dependency, we will need to fix in later release
-        maven { url 'https://maven.scijava.org/content/repositories/public/' }
-    }
-}
-```
-
 Add this line to your dependencies in app-level build.gradle file:
 
 ```

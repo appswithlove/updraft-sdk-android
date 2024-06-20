@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FreeDrawView">
+        <attr name="paintColor" format="color"/>
+        <attr name="paintWidth" format="dimension"/>
+        <attr name="paintAlpha" format="integer"/>
+        <attr name="resizeBehaviour" format="enum">
+            <enum name="clear" value="0"/>
+            <enum name="fitXY" value="1"/>
+            <enum name="crop" value="2"/>
+        </attr>
+    </declare-styleable>
+</resources>

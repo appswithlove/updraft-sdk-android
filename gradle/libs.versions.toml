@@ -4,7 +4,6 @@ appcompat = "1.7.0"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
 dokkaGradlePlugin = "1.7.20"
-freedrawview = "1.1.2"
 gradle = "8.2.2"
 ink = "1.0.0"
 lifecycleExtensions = "2.2.0"
@@ -29,7 +28,6 @@ constraintlayout = { module = "androidx.constraintlayout:constraintlayout", vers
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokkaGradlePlugin" }
-freedrawview = { module = "com.rm:freedrawview", version.ref = "freedrawview" }
 ink = { module = "com.simplify:ink", version.ref = "ink" }
 kotlin-stdlib-jdk7 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 lifecycle-compiler = { module = "androidx.lifecycle:lifecycle-compiler", version.ref = "lifecycleExtensions" }

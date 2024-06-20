@@ -3,7 +3,6 @@ pluginManagement {
         google()
         gradlePluginPortal()
         mavenCentral()
-        maven { url 'https://maven.scijava.org/content/repositories/public/' }
     }
 }
 
@@ -11,10 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://maven.scijava.org/content/repositories/public/' }
     }
 }
 
 rootProject.name = "updraft-sdk-android"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-include ':app', ':updraft-sdk'
+include ':app', ':updraft-sdk', ':freedrawview'
