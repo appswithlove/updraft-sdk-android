@@ -16,7 +16,7 @@ Updraft is built by App Agencies [Apps with love](https://appswithlove.com/) and
 
 ## Requirements
 
-- minSdkVersion >=19
+- minSdkVersion >=21
 
 ## Installation
 
@@ -36,7 +36,7 @@ Add this line to your dependencies in app-level build.gradle file:
 
 ```
 dependencies {
-    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.14'
+    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.15'
 }
 ```
 
