@@ -1,21 +1,20 @@
 [versions]
 androidMavenGradlePlugin = "2.1"
-appcompat = "1.6.1"
+appcompat = "1.7.0"
 constraintlayout = "2.1.4"
-coreKtx = "1.7.0"
+coreKtx = "1.13.1"
 dokkaGradlePlugin = "1.7.20"
-freedrawview = "1.1.2"
-gradle = "8.2.2"
+gradle = "8.3.2"
 ink = "1.0.0"
-lifecycleExtensions = "2.0.0"
-lifecycleViewmodelKtx = "2.6.1"
+lifecycleExtensions = "2.2.0"
+lifecycleViewmodelKtx = "2.8.2"
 loco = "0.3.1"
-loggingInterceptor = "3.10.0"
-material = "1.9.0"
+loggingInterceptor = "4.12.0"
+material = "1.12.0"
 multidex = "1.0.3"
-retrofit = "2.4.0"
-rxandroid = "2.0.2"
-rxjava = "2.1.12"
+retrofit = "2.9.0"
+rxandroid = "2.1.1"
+rxjava = "2.2.21"
 updraft = "2.2.4"
 kotlin = "1.9.23"
 vanniktechMavenPublish = "0.24.0"
@@ -29,7 +28,6 @@ constraintlayout = { module = "androidx.constraintlayout:constraintlayout", vers
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokkaGradlePlugin" }
-freedrawview = { module = "com.rm:freedrawview", version.ref = "freedrawview" }
 ink = { module = "com.simplify:ink", version.ref = "ink" }
 kotlin-stdlib-jdk7 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 lifecycle-compiler = { module = "androidx.lifecycle:lifecycle-compiler", version.ref = "lifecycleExtensions" }
@@ -46,6 +44,8 @@ tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = 
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 loco = { module = "com.appswithlove.loco:loco", version = "0.3.1" }
 updraft = { module = "com.appswithlove.updraft:updraft", version.ref = "updraft" }
+androidx-startup = { module = "androidx.startup:startup-runtime", version = "1.1.1" }
+androidx-annotation = { module = "androidx.annotation:annotation", version = "1.8.0" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "gradle" }
