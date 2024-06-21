@@ -15,7 +15,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 34
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -45,7 +45,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':freedrawview')
 
     implementation libs.appcompat
     implementation libs.material

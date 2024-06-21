@@ -18,6 +18,8 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
+import com.appswithlove.updraft.R;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
