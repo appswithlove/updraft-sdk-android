@@ -24,7 +24,7 @@ Add this line to your dependencies in app-level build.gradle file:
 
 ```
 dependencies {
-    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.15'
+    implementation 'com.appswithlove.updraft:updraft-sdk:1.0.16'
 }
 ```
 
