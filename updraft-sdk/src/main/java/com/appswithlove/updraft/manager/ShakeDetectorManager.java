@@ -82,7 +82,7 @@ public class ShakeDetectorManager implements LifecycleObserver, SensorEventListe
         float gForce = (float) Math.sqrt(gX * gX + gY * gY + gZ * gZ);
 
         if (mSettings.getLogLevel() == Settings.LOG_LEVEL_DEBUG) {
-            Log.d(UPDRAFT_TAG, "sensor change with gForce = " + gForce);
+//            Log.d(UPDRAFT_TAG, "sensor change with gForce = " + gForce);
         }
 
         if (gForce > SHAKE_THRESHOLD_GRAVITY) {

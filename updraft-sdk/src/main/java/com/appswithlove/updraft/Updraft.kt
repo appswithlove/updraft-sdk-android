@@ -8,12 +8,18 @@ import com.appswithlove.updraft.manager.AppUpdateManager
 import com.appswithlove.updraft.manager.CheckFeedbackEnabledManager
 import com.appswithlove.updraft.manager.CurrentActivityManger
 import com.appswithlove.updraft.manager.ShakeDetectorManager
+import com.appswithlove.updraft.presentation.DefaultScreenshotProvider
+import com.appswithlove.updraft.presentation.ScreenshotProvider
 import com.appswithlove.updraft.presentation.UpdraftSdkUi
 
 /**
  * Created by satori on 3/27/18.
  */
-class Updraft private constructor(application: Application, private val settings: Settings) {
+class Updraft private constructor(
+    application: Application,
+    private val settings: Settings,
+    screenshotProvider: ScreenshotProvider,
+) {
     private val mAppUpdateManager: AppUpdateManager
     val shakeDetectorManager: ShakeDetectorManager
     private val mCheckFeedbackEnabledManager: CheckFeedbackEnabledManager
@@ -29,7 +35,7 @@ class Updraft private constructor(application: Application, private val settings
 
     init {
         val checkUpdateInteractor = CheckUpdateInteractor(apiWrapper)
-        val updraftSdkUi = UpdraftSdkUi(CurrentActivityManger.INSTANCE, settings)
+        val updraftSdkUi = UpdraftSdkUi(CurrentActivityManger.INSTANCE, settings, screenshotProvider)
         mAppUpdateManager = AppUpdateManager(checkUpdateInteractor, updraftSdkUi)
         val checkFeedbackEnabledInteractor = CheckFeedbackEnabledInteractor(
             apiWrapper, application
@@ -50,9 +56,9 @@ class Updraft private constructor(application: Application, private val settings
         }
 
         @Synchronized
-        private fun createUpdraft(application: Application, settings: Settings) {
+        private fun createUpdraft(application: Application, settings: Settings, screenshotProvider: ScreenshotProvider = DefaultScreenshotProvider()) {
             if (instance == null) {
-                instance = Updraft(application, settings)
+                instance = Updraft(application, settings, screenshotProvider)
             }
         }
 

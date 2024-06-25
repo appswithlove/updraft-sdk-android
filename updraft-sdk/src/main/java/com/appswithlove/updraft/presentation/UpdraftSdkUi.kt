@@ -22,8 +22,9 @@ import java.io.IOException
 class UpdraftSdkUi(
     currentActivityManger: CurrentActivityManger,
     private val mSettings: Settings,
+    private val screenshotProvider: ScreenshotProvider,
 ) : CurrentActivityManger.CurrentActivityListener {
-    private var mCurrentActivity: Activity? = null
+    private var currentActivity: Activity? = null
     private var mShowDialogPending = false
     private var mPendingUrl: String? = null
     private var mListener: Listener? = null
@@ -49,12 +50,12 @@ class UpdraftSdkUi(
             return
         }
         if (!mFeedbackAlertShown) {
-            if (mCurrentActivity == null) {
+            if (currentActivity == null) {
                 mShowStartAlertDialogPending = true
                 return
             }
             mShowStartAlertDialogPending = false
-            val builder = AlertDialog.Builder(mCurrentActivity)
+            val builder = AlertDialog.Builder(currentActivity)
             builder.setTitle(R.string.updraft_feedbackDialog_title)
             builder.setMessage(R.string.updraft_feedbackDialog_description)
             builder.setCancelable(true)
@@ -65,7 +66,7 @@ class UpdraftSdkUi(
     }
 
     fun showUpdateAvailableAlert(url: String) {
-        if (mCurrentActivity == null) {
+        if (currentActivity == null) {
             mShowDialogPending = true
             mPendingUrl = url
             return
@@ -77,7 +78,7 @@ class UpdraftSdkUi(
 
         mShowDialogPending = false
         mPendingUrl = null
-        val builder = AlertDialog.Builder(mCurrentActivity)
+        val builder = AlertDialog.Builder(currentActivity)
         builder.setPositiveButton(android.R.string.ok) { dialog: DialogInterface?, id: Int ->
             if (mListener != null) {
                 mListener?.onOkClicked(url)
@@ -92,12 +93,12 @@ class UpdraftSdkUi(
     }
 
     fun showFeedbackDisabledAlert() {
-        if (mCurrentActivity == null) {
+        if (currentActivity == null) {
             mShowFeedbackDisabledDialogPending = true
             return
         }
         mShowFeedbackDisabledDialogPending = false
-        val builder = AlertDialog.Builder(mCurrentActivity)
+        val builder = AlertDialog.Builder(currentActivity)
         builder.setNegativeButton(R.string.updraft_button_cancel) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
         builder.setCancelable(false)
         builder.setTitle(R.string.updraft_feedbackDisabled_title)
@@ -106,12 +107,12 @@ class UpdraftSdkUi(
     }
 
     fun showHowToGiveFeedbackAlert() {
-        if (mCurrentActivity == null) {
+        if (currentActivity == null) {
             mShowHowToFeedbackDialogPending = true
             return
         }
         mShowHowToFeedbackDialogPending = false
-        val builder = AlertDialog.Builder(mCurrentActivity)
+        val builder = AlertDialog.Builder(currentActivity)
         builder.setTitle(R.string.updraft_feedbackDialog_title)
         builder.setMessage(R.string.updraft_feedbackDialog_description)
         builder.setPositiveButton(R.string.updraft_button_ok) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
@@ -121,35 +122,28 @@ class UpdraftSdkUi(
     fun openUrl(url: String?) {
         val uri = Uri.parse(url)
         val i = Intent(Intent.ACTION_VIEW, uri)
-        if (mCurrentActivity != null) {
-            mCurrentActivity!!.startActivity(i)
+        if (currentActivity != null) {
+            currentActivity!!.startActivity(i)
         }
     }
 
     fun showFeedback() {
         var activityStarted = false
-        if (mCurrentActivity != null) {
-            val v1 = mCurrentActivity!!.window.decorView.rootView
-            if (v1 != null) {
-                v1.isDrawingCacheEnabled = true
-                val drawingCache = v1.drawingCache
-                if (drawingCache == null || drawingCache.width == 0) {
-                    v1.isDrawingCacheEnabled = false
-                    return
-                }
-                val bitmap = Bitmap.createBitmap(v1.drawingCache)
-                v1.isDrawingCacheEnabled = false
+        val activity = currentActivity
+        if (activity != null) {
+            val bitmap = screenshotProvider.getBitmap(activity)
+            if (bitmap != null) {
                 try {
                     saveBitmap(bitmap)
-                    val intent = FeedbackActivity.getIntent(mCurrentActivity, FILENAME)
-                    mCurrentActivity!!.startActivity(intent)
-                    mCurrentActivity!!.overridePendingTransition(0, 0)
+                    val intent = FeedbackActivity.getIntent(activity, FILENAME)
+                    activity.startActivity(intent)
+                    activity.overridePendingTransition(0, 0)
                     activityStarted = true
                 } catch (e: IOException) {
                     if (BuildConfig.DEBUG) {
                         e.printStackTrace()
                     }
-                    Toast.makeText(mCurrentActivity, R.string.updraft_global_error, Toast.LENGTH_SHORT)
+                    Toast.makeText(activity, R.string.updraft_global_error, Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -162,7 +156,7 @@ class UpdraftSdkUi(
     @Throws(IOException::class)
     private fun saveBitmap(bitmap: Bitmap) {
         //Write file
-        val stream = mCurrentActivity!!.openFileOutput(FILENAME, Context.MODE_PRIVATE)
+        val stream = currentActivity!!.openFileOutput(FILENAME, Context.MODE_PRIVATE)
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
 
         //Cleanup
@@ -172,7 +166,7 @@ class UpdraftSdkUi(
 
 
     fun closeFeedback() {
-        mCurrentActivity.apply {
+        currentActivity.apply {
             if (this is FeedbackActivity && !this.isFinishing()) {
                 this.finish()
             }
@@ -180,7 +174,7 @@ class UpdraftSdkUi(
     }
 
     override fun onActivityResumed(activity: Activity) {
-        mCurrentActivity = activity
+        currentActivity = activity
         if (mShowStartAlertDialogPending) {
             showFeedbackAlert()
         }
@@ -202,7 +196,7 @@ class UpdraftSdkUi(
         if (activity is FeedbackActivity) {
             isCurrentlyShowingFeedback = false
         }
-        mCurrentActivity = null
+        currentActivity = null
     }
 
     companion object {
