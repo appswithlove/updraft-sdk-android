@@ -51,12 +51,12 @@ class Updraft private constructor(
         private const val NOT_INITIALIZED_MESSAGE =
             "Must initialize Updraft before using getInstance()"
         private var instance: Updraft? = null
-        fun initialize(application: Application, settings: Settings) {
-            createUpdraft(application, settings)
+        fun initialize(application: Application, settings: Settings, screenshotProvider: ScreenshotProvider = DefaultScreenshotProvider()) {
+            createUpdraft(application, settings, screenshotProvider)
         }
 
         @Synchronized
-        private fun createUpdraft(application: Application, settings: Settings, screenshotProvider: ScreenshotProvider = DefaultScreenshotProvider()) {
+        private fun createUpdraft(application: Application, settings: Settings, screenshotProvider: ScreenshotProvider) {
             if (instance == null) {
                 instance = Updraft(application, settings, screenshotProvider)
             }
