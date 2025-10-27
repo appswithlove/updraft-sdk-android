@@ -36,8 +36,9 @@ class AppUpdateManager(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { checkUpdateResultModel: CheckUpdateResultModel ->
-                    if (checkUpdateResultModel.isShowAlert) {
-                        mUpdraftSdkUi.showUpdateAvailableAlert(checkUpdateResultModel.url)
+                    val url = checkUpdateResultModel.url
+                    if (checkUpdateResultModel.showAlert && url != null) {
+                        mUpdraftSdkUi.showUpdateAvailableAlert(url)
                     }
                 }) { obj: Throwable -> obj.printStackTrace() }
     }

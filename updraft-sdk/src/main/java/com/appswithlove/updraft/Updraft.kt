@@ -43,7 +43,7 @@ class Updraft private constructor(
         mCheckFeedbackEnabledManager =
             CheckFeedbackEnabledManager(updraftSdkUi, checkFeedbackEnabledInteractor)
         shakeDetectorManager =
-            ShakeDetectorManager(application, updraftSdkUi, settings, mCheckFeedbackEnabledManager)
+            ShakeDetectorManager(application, settings, mCheckFeedbackEnabledManager)
     }
 
     companion object {
