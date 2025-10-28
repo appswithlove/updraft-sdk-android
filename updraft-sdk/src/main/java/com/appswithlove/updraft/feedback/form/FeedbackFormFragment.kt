@@ -7,27 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Spinner
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.appswithlove.updraft.R
+import com.appswithlove.updraft.databinding.FragmentUpdraftFeedbackBinding
 import com.appswithlove.updraft.feedback.FeedbackRootContainer
 
 class FeedbackFormFragment : Fragment(), FeedbackFormContract.View {
 
+    private var _binding: FragmentUpdraftFeedbackBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var presenter: FeedbackFormPresenter
     private var feedbackRootContainer: FeedbackRootContainer? = null
-    private lateinit var spinner: Spinner
-    private lateinit var emailEdit: EditText
-    private lateinit var descriptionEdit: EditText
-    private lateinit var progress: View
-    private lateinit var progressBar: ProgressBar
-    private lateinit var progressText: TextView
-    private lateinit var progressTitle: TextView
-    private lateinit var progressCancelButton: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,76 +42,68 @@ class FeedbackFormFragment : Fragment(), FeedbackFormContract.View {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_updraft_feedback, container, false)
+        _binding = FragmentUpdraftFeedbackBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progress = view.findViewById(R.id.updraft_feedback_progress_container)
 
-        view.findViewById<View>(R.id.updraft_feedback_previous_button).setOnClickListener {
-            feedbackRootContainer?.goPrevious()
-        }
+        with(binding) {
+            updraftFeedbackPreviousButton.setOnClickListener {
+                feedbackRootContainer?.goPrevious()
+            }
 
-        emailEdit = view.findViewById(R.id.updraft_feedback_email)
-        descriptionEdit = view.findViewById(R.id.updraft_feedback_description)
+            val sendButton = updraftFeedbackSendButton
+            sendButton.setOnClickListener { presenter.onSendButtonClicked() }
+            sendButton.isEnabled = false
 
-        val sendButton: Button = view.findViewById(R.id.updraft_feedback_send_button)
-        sendButton.setOnClickListener { presenter.onSendButtonClicked() }
-        sendButton.isEnabled = false
-
-        spinner = view.findViewById(R.id.updraft_feedback_type_spinner)
-
-        val feedbackChoices = listOf(
-            FeedbackChoice(
-                FeedbackChoice.FEEDBACK_TYPE_NOT_SELECTED,
-                getString(R.string.updraft_feedback_type_title),
-                true
-            ),
-            FeedbackChoice(
-                FeedbackChoice.FEEDBACK_TYPE_DESIGN,
-                getString(R.string.updraft_feedback_type_design),
-                false
-            ),
-            FeedbackChoice(
-                FeedbackChoice.FEEDBACK_TYPE_FEEDBACK,
-                getString(R.string.updraft_feedback_type_feedback),
-                false
-            ),
-            FeedbackChoice(
-                FeedbackChoice.FEEDBACK_TYPE_BUG,
-                getString(R.string.updraft_feedback_type_bug),
-                false
+            val feedbackChoices = listOf(
+                FeedbackChoice(
+                    FeedbackChoice.FEEDBACK_TYPE_NOT_SELECTED,
+                    getString(R.string.updraft_feedback_type_title),
+                    true
+                ),
+                FeedbackChoice(
+                    FeedbackChoice.FEEDBACK_TYPE_DESIGN,
+                    getString(R.string.updraft_feedback_type_design),
+                    false
+                ),
+                FeedbackChoice(
+                    FeedbackChoice.FEEDBACK_TYPE_FEEDBACK,
+                    getString(R.string.updraft_feedback_type_feedback),
+                    false
+                ),
+                FeedbackChoice(
+                    FeedbackChoice.FEEDBACK_TYPE_BUG,
+                    getString(R.string.updraft_feedback_type_bug),
+                    false
+                )
             )
-        )
 
-        val adapter = FeedbackFormTypeSpinnerAdapter(requireContext(), feedbackChoices)
-        spinner.adapter = adapter
+            val adapter = FeedbackFormTypeSpinnerAdapter(requireContext(), feedbackChoices)
+            updraftFeedbackTypeSpinner.adapter = adapter
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val feedbackChoice = parent.selectedItem as FeedbackChoice
-                sendButton.isEnabled = !feedbackChoice.isHiddenInDropdown
+            updraftFeedbackTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val feedbackChoice = parent.selectedItem as FeedbackChoice
+                    sendButton.isEnabled = !feedbackChoice.isHiddenInDropdown
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    sendButton.isEnabled = false
+                }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                sendButton.isEnabled = false
+            updraftFeedbackProgressCancel.setOnClickListener {
+                presenter.onProgressCancelClicked()
             }
         }
-
-        progressBar = view.findViewById(R.id.updraft_feedback_progress_bar)
-        progressText = view.findViewById(R.id.updraft_feedback_progress_text)
-        progressCancelButton = view.findViewById(R.id.updraft_feedback_progress_cancel)
-        progressCancelButton.setOnClickListener {
-            presenter.onProgressCancelClicked()
-        }
-
-        progressTitle = view.findViewById(R.id.updraft_feedback_progress_title)
 
         presenter.attachView(this)
     }
@@ -128,41 +111,48 @@ class FeedbackFormFragment : Fragment(), FeedbackFormContract.View {
     override fun onDestroyView() {
         presenter.detachView()
         super.onDestroyView()
+        _binding = null
     }
 
     override fun getSelectedChoice(): FeedbackChoice =
-        spinner.selectedItem as FeedbackChoice
+        binding.updraftFeedbackTypeSpinner.selectedItem as FeedbackChoice
 
-    override fun getEmail(): String = emailEdit.text.toString()
+    override fun getEmail(): String = binding.updraftFeedbackEmail.text.toString()
 
-    override fun getDescription(): String = descriptionEdit.text.toString()
+    override fun getDescription(): String = binding.updraftFeedbackDescription.text.toString()
 
     override fun showProgress() {
-        progress.visibility = View.VISIBLE
+        binding.updraftFeedbackProgressContainer.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        progress.visibility = View.GONE
+        binding.updraftFeedbackProgressContainer.visibility = View.GONE
     }
 
     override fun showSuccessMessage() {
-        progressTitle.setText(R.string.updraft_feedback_send_success)
-        progressBar.visibility = View.VISIBLE
-        progressCancelButton.visibility = View.GONE
+        with(binding) {
+            updraftFeedbackProgressTitle.setText(R.string.updraft_feedback_send_success)
+            updraftFeedbackProgressBar.visibility = View.VISIBLE
+            updraftFeedbackProgressCancel.visibility = View.GONE
+        }
     }
 
     override fun showErrorMessage(t: Throwable) {
-        progressTitle.setText(R.string.updraft_feedback_send_failure_title)
-        progressBar.visibility = View.GONE
-        progressText.setText(R.string.updraft_feedback_send_failure_description)
+        with(binding) {
+            updraftFeedbackProgressTitle.setText(R.string.updraft_feedback_send_failure_title)
+            updraftFeedbackProgressBar.visibility = View.GONE
+            updraftFeedbackProgressText.setText(R.string.updraft_feedback_send_failure_description)
+        }
     }
 
     @SuppressLint("SetTextI18n")
     override fun updateProgress(progress: Double) {
-        progressTitle.setText(R.string.updraft_feedback_send_inProgress)
-        progressBar.visibility = View.VISIBLE
-        progressBar.progress = (progress * 100).toInt()
-        progressText.text = "${(progress * 100).toInt()}%"
+        with(binding) {
+            updraftFeedbackProgressTitle.setText(R.string.updraft_feedback_send_inProgress)
+            updraftFeedbackProgressBar.visibility = View.VISIBLE
+            updraftFeedbackProgressBar.progress = (progress * 100).toInt()
+            updraftFeedbackProgressText.text = "${(progress * 100).toInt()}%"
+        }
     }
 
     override fun closeFeedback() {

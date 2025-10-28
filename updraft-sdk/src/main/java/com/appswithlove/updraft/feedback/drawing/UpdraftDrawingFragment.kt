@@ -1,5 +1,6 @@
 package com.appswithlove.updraft.feedback.drawing
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
@@ -23,6 +23,7 @@ import com.appswithlove.updraft.feedback.FeedbackActivity
 import com.appswithlove.updraft.feedback.FeedbackRootContainer
 import com.rm.freedrawview.FreeDrawView
 import androidx.core.graphics.createBitmap
+import com.appswithlove.updraft.databinding.FragmentUpdraftDrawingBinding
 
 class UpdraftDrawingFragment : Fragment() {
 
@@ -38,10 +39,12 @@ class UpdraftDrawingFragment : Fragment() {
         }
     }
 
+    private var _binding: FragmentUpdraftDrawingBinding? = null
+    private val binding get() = _binding!!
+
     private var feedbackRootContainer: FeedbackRootContainer? = null
     private var currentBitmap: Bitmap? = null
-    private lateinit var screenShotBitmapHolder: ImageView
-    private lateinit var freeDrawView: FreeDrawView
+
     private var fileName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,69 +69,75 @@ class UpdraftDrawingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_updraft_drawing, container, false)
+        _binding = FragmentUpdraftDrawingBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        screenShotBitmapHolder = view.findViewById(R.id.updraft_screenshot_bitmap_holder)
-        freeDrawView = view.findViewById(R.id.updraft_drawing_view)
-        freeDrawView.setPaintWidthPx(6f)
+        with(binding) {
+            updraftDrawingView.setPaintWidthPx(6f)
 
-        val colorSelectRadioGroup: RadioGroup =
-            view.findViewById(R.id.updraft_color_select_radiogroup)
-        colorSelectRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            when (checkedId) {
-                R.id.updraft_color_button_black -> freeDrawView.setPaintColor(Color.BLACK)
-                R.id.updraft_color_button_white -> freeDrawView.setPaintColor(Color.WHITE)
-                R.id.updraft_color_button_yellow -> freeDrawView.setPaintColor(
-                    ResourcesCompat.getColor(resources, R.color.updraft_yellow, null)
-                )
+            val colorSelectRadioGroup: RadioGroup = binding.updraftColorSelectRadiogroup
+            colorSelectRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+                when (checkedId) {
+                    updraftColorButtonBlack.id -> updraftDrawingView.setPaintColor(Color.BLACK)
+                    updraftColorButtonWhite.id -> updraftDrawingView.setPaintColor(Color.WHITE)
+                    updraftColorButtonYellow.id -> updraftDrawingView.setPaintColor(
+                        ResourcesCompat.getColor(resources, R.color.updraft_yellow, null)
+                    )
 
-                R.id.updraft_color_button_red -> freeDrawView.setPaintColor(
-                    ResourcesCompat.getColor(resources, R.color.updraft_red, null)
-                )
+                    updraftColorButtonRed.id -> updraftDrawingView.setPaintColor(
+                        ResourcesCompat.getColor(resources, R.color.updraft_red, null)
+                    )
+                }
+            }
+
+            updraftColorSelectResetButton.setOnClickListener {
+                updraftDrawingView.undoLast()
+            }
+
+            try {
+                val inputStream = requireContext().openFileInput(fileName ?: return)
+                currentBitmap = BitmapFactory.decodeStream(inputStream)
+                inputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            updateBitmap()
+
+            updraftFeedbackNextButton.setOnClickListener {
+                updraftDrawingView.getDrawScreenshot(object : FreeDrawView.DrawCreatorListener {
+                    override fun onDrawCreated(draw: Bitmap) {
+                        saveBitmap(draw)
+                    }
+
+                    override fun onDrawCreationError() {
+                        saveBitmap(null)
+                    }
+                })
+            }
+
+            val drawSomethingHereContainer = updraftDrawHereContainer
+            drawSomethingHereContainer.setOnTouchListener { v, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    v.performClick()
+                    v.visibility = View.GONE
+                }
+                false
             }
         }
+    }
 
-        view.findViewById<View>(R.id.updraft_color_select_reset_button).setOnClickListener {
-            freeDrawView.undoLast()
-        }
-
-        try {
-            val inputStream = requireContext().openFileInput(fileName ?: return)
-            currentBitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        updateBitmap()
-
-        view.findViewById<View>(R.id.updraft_feedback_next_button).setOnClickListener {
-            freeDrawView.getDrawScreenshot(object : FreeDrawView.DrawCreatorListener {
-                override fun onDrawCreated(draw: Bitmap) {
-                    saveBitmap(draw)
-                }
-
-                override fun onDrawCreationError() {
-                    saveBitmap(null)
-                }
-            })
-        }
-
-        val drawSomethingHereContainer: View = view.findViewById(R.id.updraft_draw_here_container)
-        drawSomethingHereContainer.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                v.performClick()
-                v.visibility = View.GONE
-            }
-            false
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun updateBitmap() {
         Handler(Looper.getMainLooper()).post {
-            screenShotBitmapHolder.setImageBitmap(currentBitmap)
+            binding.updraftScreenshotBitmapHolder.setImageBitmap(currentBitmap)
         }
     }
 
@@ -154,8 +163,11 @@ class UpdraftDrawingFragment : Fragment() {
             feedbackRootContainer?.goNext()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(requireContext(), R.string.updraft_global_error, Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                requireContext(),
+                R.string.updraft_global_error,
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
 }
