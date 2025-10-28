@@ -8,12 +8,12 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
@@ -23,6 +23,7 @@ import com.appswithlove.updraft.feedback.FeedbackActivity
 import com.appswithlove.updraft.feedback.FeedbackRootContainer
 import com.rm.freedrawview.FreeDrawView
 import androidx.core.graphics.createBitmap
+import androidx.core.view.doOnLayout
 import com.appswithlove.updraft.databinding.FragmentUpdraftDrawingBinding
 
 class UpdraftDrawingFragment : Fragment() {
@@ -136,23 +137,73 @@ class UpdraftDrawingFragment : Fragment() {
     }
 
     private fun updateBitmap() {
-        Handler(Looper.getMainLooper()).post {
-            binding.updraftScreenshotBitmapHolder.setImageBitmap(currentBitmap)
+        binding.updraftScreenshotBitmapHolder.doOnLayout { view ->
+            val imageView = view as ImageView
+            imageView.setImageBitmap(currentBitmap)
+
+            val drawable = imageView.drawable ?: return@doOnLayout
+
+            // Original image size
+            val intrinsicWidth = drawable.intrinsicWidth
+            val intrinsicHeight = drawable.intrinsicHeight
+
+            // Actual ImageView size
+            val imageViewWidth = imageView.width.toFloat()
+            val imageViewHeight = imageView.height.toFloat()
+
+            // ImageView scaleType
+            val scale: Float
+            val dx: Float
+            val dy: Float
+            if (intrinsicWidth * imageViewHeight > imageViewWidth * intrinsicHeight) {
+                // Image is taller than the view
+                scale = imageViewWidth / intrinsicWidth
+                dx = 0f
+                dy = (imageViewHeight - intrinsicHeight * scale) / 2f
+            } else {
+                // Image is wider than the view
+                scale = imageViewHeight / intrinsicHeight
+                dx = (imageViewWidth - intrinsicWidth * scale) / 2f
+                dy = 0f
+            }
+
+            val displayedImageWidth = intrinsicWidth * scale
+            val displayedImageHeight = intrinsicHeight * scale
+
+            // Set FreeDrawView to match displayed area
+            val params = binding.updraftDrawingView.layoutParams as FrameLayout.LayoutParams
+            params.width = displayedImageWidth.toInt()
+            params.height = displayedImageHeight.toInt()
+            params.leftMargin = dx.toInt()
+            params.topMargin = dy.toInt()
+            binding.updraftDrawingView.layoutParams = params
         }
     }
 
     private fun saveBitmap(drawnBitmap: Bitmap?) {
         val baseBitmap = currentBitmap ?: return
-        val bitmapConfig = baseBitmap.config ?: return
-        val bmOverlay = createBitmap(
-            baseBitmap.width,
-            baseBitmap.height,
-            bitmapConfig
-        )
+        val bitmapConfig = baseBitmap.config ?: Bitmap.Config.ARGB_8888
 
+        // Create a bitmap with the same size as the original
+        val bmOverlay = createBitmap(baseBitmap.width, baseBitmap.height, bitmapConfig)
         val canvas = Canvas(bmOverlay)
-        canvas.drawBitmap(baseBitmap, Matrix(), null)
-        drawnBitmap?.let { canvas.drawBitmap(it, Matrix(), null) }
+
+        // Draw the base bitmap
+        canvas.drawBitmap(baseBitmap, 0f, 0f, null)
+
+        // Draw the overlay bitmap scaled to match the base bitmap
+        drawnBitmap?.let { overlay ->
+            if (overlay.width != baseBitmap.width || overlay.height != baseBitmap.height) {
+                val matrix = Matrix().apply {
+                    val scaleX = baseBitmap.width.toFloat() / overlay.width
+                    val scaleY = baseBitmap.height.toFloat() / overlay.height
+                    postScale(scaleX, scaleY)
+                }
+                canvas.drawBitmap(overlay, matrix, null)
+            } else {
+                canvas.drawBitmap(overlay, 0f, 0f, null)
+            }
+        }
 
         try {
             requireContext().openFileOutput(FeedbackActivity.SAVED_SCREENSHOT, Context.MODE_PRIVATE)

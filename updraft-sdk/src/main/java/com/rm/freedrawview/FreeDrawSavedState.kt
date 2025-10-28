@@ -21,33 +21,36 @@ class FreeDrawSavedState(
 ) : View.BaseSavedState(superState) {
 
     constructor(parcel: Parcel) : this(
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        superState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             parcel.readParcelable(Point::class.java.classLoader, Point::class.java)
         } else {
             @Suppress("DEPRECATION")
             parcel.readParcelable(Point::class.java.classLoader)
         },
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            parcel.createTypedArrayList(HistoryPath.CREATOR) ?: arrayListOf()
-        } else {
-            @Suppress("DEPRECATION")
-            parcel.createTypedArrayList(HistoryPath.CREATOR) ?: arrayListOf()
-        },
-        ArrayList<HistoryPath>().apply { parcel.readTypedList(this, HistoryPath.CREATOR) },
-        parcel.readFloat(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readSerializable() as ResizeBehaviour,
-        parcel.readInt(),
-        parcel.readInt()
+        paths = parcel.createTypedArrayList(HistoryPath.CREATOR) ?: arrayListOf(),
+        canceledPaths = parcel.createTypedArrayList(HistoryPath.CREATOR) ?: arrayListOf(),
+        paintWidth = parcel.readFloat(),
+        paintColor = parcel.readInt(),
+        paintAlpha = parcel.readInt(),
+        resizeBehaviour = ResizeBehaviour.entries[parcel.readInt()],
+        lastDimensionW = parcel.readInt(),
+        lastDimensionH = parcel.readInt()
     )
 
     fun getCurrentPaint(): Paint {
         val paint = FreeDrawHelper.createPaint()
         FreeDrawHelper.setupStrokePaint(paint)
-        FreeDrawHelper.copyFromValues(paint, paintColor, paintAlpha, paintWidth, true)
+        FreeDrawHelper.copyFromValues(
+            to = paint,
+            color = paintColor,
+            alpha = paintAlpha,
+            strokeWidth = paintWidth,
+            copyWidth = true
+        )
         return paint
     }
+
+    fun getCurrentPaintWidth(): Float = paintWidth
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)

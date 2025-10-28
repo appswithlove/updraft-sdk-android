@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.appswithlove.updraft.R
 import com.appswithlove.updraft.Updraft
 import com.appswithlove.updraft.databinding.FeedbackActivityBinding
 import com.appswithlove.updraft.feedback.drawing.UpdraftDrawingFragment
@@ -75,7 +74,7 @@ class FeedbackActivity : AppCompatActivity(), FeedbackRootContainer {
 
     override fun goNext() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.updraft_feedback_root_container, FeedbackFormFragment())
+            .replace(binding.updraftFeedbackRootContainer.id, FeedbackFormFragment())
             .addToBackStack(null)
             .commit()
     }

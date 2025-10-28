@@ -8,8 +8,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/updraft_drawing_container_margin_end"
-        android:layout_marginStart="@dimen/drawing_container_margin_start"
         android:layout_weight="1">
 
         <ImageView
@@ -35,19 +33,19 @@
             android:background="@color/charcoal_grey_70">
 
             <TextView
-                android:text="@string/updraft.feedback.drawDescription"
-                android:layout_width="wrap_content"
                 style="@style/UpdraftDrawSomethingHereText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:text="@string/updraft.feedback.drawDescription" />
         </FrameLayout>
     </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/updraft_drawing_container_buttons_margin_bottom"
         android:layout_marginTop="@dimen/updraft_drawing_container_buttons_margin_top"
+        android:layout_marginBottom="@dimen/updraft_drawing_container_buttons_margin_bottom"
         android:orientation="horizontal">
 
 
@@ -61,8 +59,8 @@
                 android:id="@+id/updraft_color_button_black"
                 android:layout_width="@dimen/updraft_radio_button_size"
                 android:layout_height="@dimen/updraft_radio_button_size"
-                android:layout_marginEnd="@dimen/updraft_radio_buttons_horizontal_margin"
                 android:layout_marginStart="@dimen/updraft_radio_buttons_horizontal_margin"
+                android:layout_marginEnd="@dimen/updraft_radio_buttons_horizontal_margin"
                 android:background="@drawable/updraft_black_button"
                 android:button="@null" />
 
@@ -107,12 +105,11 @@
             android:id="@+id/updraft_feedback_next_button"
             style="@style/UpdraftBackAndPreviousButton"
             android:layout_width="wrap_content"
-            android:gravity="center_vertical"
             android:layout_height="match_parent"
             android:layout_gravity="end|center_vertical"
-            android:paddingEnd="@dimen/updraft_drawing_container_buttons_margin_end"
+            android:gravity="center_vertical"
             android:paddingStart="16dp"
+            android:paddingEnd="@dimen/updraft_drawing_container_buttons_margin_end"
             android:text="@string/updraft.button.next" />
-
     </LinearLayout>
 </LinearLayout>

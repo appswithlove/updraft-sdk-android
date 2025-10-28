@@ -18,7 +18,9 @@ object FreeDrawHelper {
         if (points.size == 1) return true
 
         for (i in 1 until points.size) {
-            if (points[i - 1].x != points[i].x || points[i - 1].y != points[i].y) return false
+            if (points[i - 1].x != points[i].x || points[i - 1].y != points[i].y) {
+                return false
+            }
         }
         return true
     }
@@ -46,7 +48,11 @@ object FreeDrawHelper {
         paintWidth: Float,
         fill: Boolean
     ) {
-        if (fill) setupFillPaint(paint) else setupStrokePaint(paint)
+        if (fill) {
+            setupFillPaint(paint)
+        } else {
+            setupStrokePaint(paint)
+        }
         paint.strokeWidth = paintWidth
         paint.color = paintColor
         paint.alpha = paintAlpha
@@ -66,16 +72,26 @@ object FreeDrawHelper {
         paint.style = Style.STROKE
     }
 
-    fun copyFromPaint(from: Paint, to: Paint, copyWidth: Boolean) {
-        to.color = from.color
-        to.alpha = from.alpha
-        if (copyWidth) to.strokeWidth = from.strokeWidth
-    }
+//    fun copyFromPaint(from: Paint, to: Paint, copyWidth: Boolean) {
+//        to.color = from.color
+//        to.alpha = from.alpha
+//        if (copyWidth) {
+//            to.strokeWidth = from.strokeWidth
+//        }
+//    }
 
-    fun copyFromValues(to: Paint, color: Int, alpha: Int, strokeWidth: Float, copyWidth: Boolean) {
+    fun copyFromValues(
+        to: Paint,
+        color: Int,
+        alpha: Int,
+        strokeWidth: Float,
+        copyWidth: Boolean,
+    ) {
         to.color = color
         to.alpha = alpha
-        if (copyWidth) to.strokeWidth = strokeWidth
+        if (copyWidth) {
+            to.strokeWidth = strokeWidth
+        }
     }
 
     /** Convert dp to pixels **/
