@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.widget.Toast
 import com.appswithlove.updraft.BuildConfig
 import com.appswithlove.updraft.R
@@ -15,6 +14,7 @@ import com.appswithlove.updraft.Updraft.Companion.getInstance
 import com.appswithlove.updraft.feedback.FeedbackActivity
 import com.appswithlove.updraft.manager.CurrentActivityManger
 import java.io.IOException
+import androidx.core.net.toUri
 
 /**
  * Created by satori on 3/27/18.
@@ -120,7 +120,7 @@ class UpdraftSdkUi(
     }
 
     fun openUrl(url: String?) {
-        val uri = Uri.parse(url)
+        val uri = url?.toUri()
         val i = Intent(Intent.ACTION_VIEW, uri)
         if (currentActivity != null) {
             currentActivity!!.startActivity(i)
@@ -167,7 +167,7 @@ class UpdraftSdkUi(
 
     fun closeFeedback() {
         currentActivity.apply {
-            if (this is FeedbackActivity && !this.isFinishing()) {
+            if (this is FeedbackActivity && !this.isFinishing) {
                 this.finish()
             }
         }
