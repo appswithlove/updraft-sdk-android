@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.appswithlove.updraftsdk"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 5
         versionName = "1.4"

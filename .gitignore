@@ -25,3 +25,5 @@ build/
 *.iws
 
 Keys.kt
+
+.kotlin
