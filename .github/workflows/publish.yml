@@ -1,29 +1,47 @@
 name: Publish
 
 on:
-  release:
-    types: [ created ]
+  push:
+    branches: [ production ]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      -   uses: actions/checkout@v3
-      -   name: set up JDK 17
-          uses: actions/setup-java@v3
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-            cache: gradle
+      - uses: actions/checkout@v3
+      - name: set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
 
-      -   name: Grant execute permission for gradlew
-          run: chmod +x gradlew
-      -   name: Publish with Gradle
-          run: ./gradlew :updraft-sdk:publish
-      -   name: Close and Release
-          run: ./gradlew :updraft-sdk:closeAndReleaseRepository
-    env:
-      ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-      ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
-      ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
-      ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Publish to Maven Central Portal
+        run: ./gradlew :updraft-sdk:publish --no-configuration-cache
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+
+      - name: Extract version from gradle.properties
+        id: get_version
+        run: echo "version=$(grep VERSION_NAME updraft-sdk/gradle.properties | cut -d'=' -f2)" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          release_name: ${{ steps.get_version.outputs.version }}
+          body: |
+            Automated release ${{ steps.get_version.outputs.version }}
+            
+            Published to:
+            - Maven Central
+          draft: false
+          prerelease: false
