@@ -1,7 +1,8 @@
 ![Updraft: Mobile App Distribution](updraft.png)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.appswithlove.updraft/updraft-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.appswithlove.updraft/updraft-sdk)
+
+[![Maven Central](https://maven-badges.sml.io/sonatype-central/com.appswithlove.updraft/updraft-sdk/badge.svg)](https://maven-badges.sml.io/sonatype-central/com.appswithlove.updraft/updraft-sdk)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/appswithlove/updraft-sdk-ios/master/LICENSE)
-[![Twitter](https://img.shields.io/badge/twitter-@GetUpdraft-blue.svg?style=flat)](https://twitter.com/GetUpdraft)
+[![Bluesky](https://img.shields.io/badge/Bluesky-@appswithlove.bsky.social-blue.svg?style=flat)]([https://twitter.com/GetUpdraft](https://bsky.app/profile/appswithlove.bsky.social))
 
 
 # Updraft SDK
@@ -20,30 +21,38 @@ Updraft is built by App Agencies [Apps with love](https://appswithlove.com/) and
 
 ## Installation
 
-Add this line to your dependencies in app-level build.gradle file:
+Add the updraft-sdk dependency:
 
+```kotlin
+// libs.versions.toml
+[versions]
+updraft-sdk = "1.1.0"
+
+[libraries]
+updraft-sdk =  { module = "com.appswithlove.updraft:updraft-sdk", version.ref = "updraft-sdk" }
 ```
+
+```kotlin
+// build.gradle.kts
 dependencies {
-    implementation 'com.appswithlove.updraft:updraft-sdk:1.1.0'
+    implementation(libs.updraft.sdk)
 }
 ```
 
 ## Setup
 
-```
+```kotlin
 override fun onCreate() {
     super.onCreate()
-    val settings = Settings()
-    settings.appKey = APP_KEY
-    settings.sdkKey = SDK_KEY
-    //Should app be in store
-    settings.isStoreRelease = false
-    //Optional base url for updraft
-    settings.baseUrl = Settings.BASE_URL_STAGING;
-    //Optional set if should show start alert
-    settings.logLevel = Settings.LOG_LEVEL_DEBUG
-    //Optional set if should show start alert
-    settings.showFeedbackAlert = true
+    val settings = Settings().apply {
+        appKey = APP_KEY
+        sdkKey = SDK_KEY
+        baseUrl = Settings.BASE_URL_STAGING // Optional base url for updraft
+        logLevel = Settings.LOG_LEVEL_DEBUG // Optional log level
+        showFeedbackAlert = true // Optional set if should show start alert
+        feedbackEnabled = true // force disabling feedback if needed
+    }
+    
     Updraft.initialize(this, settings)
     Updraft.getInstance()?.start()
 }
@@ -77,8 +86,8 @@ To check if data is send properly to Updraft and also see some additional SDK lo
 
 To change the log level, add the following line before starting the SDK:
 
-```
-    settings.setLogLevel(Settings.LOG_LEVEL_DEBUG);
+```kotlin
+settings.setLogLevel(Settings.LOG_LEVEL_DEBUG);
 ```
 
 
@@ -86,7 +95,7 @@ Default level: <b>LOG_LEVEL_ERROR</b> => Only warnings and errors will be printe
 
 ## Local Development
 
-In order to locally develop this plugin, the sample project can be used for easy testing. Additionally, the gradle task `install` allows to install the current version to Maven Local.
+In order to locally develop this plugin, the sample project can be used for easy testing. Additionally, the gradle task `publishToMavenLocal` allows to install the current version to Maven Local.
 
 ## Release
 
