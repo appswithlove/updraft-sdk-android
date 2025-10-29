@@ -43,20 +43,27 @@ class Updraft private constructor(
         mCheckFeedbackEnabledManager =
             CheckFeedbackEnabledManager(updraftSdkUi, checkFeedbackEnabledInteractor)
         shakeDetectorManager =
-            ShakeDetectorManager(application, updraftSdkUi, settings, mCheckFeedbackEnabledManager)
+            ShakeDetectorManager(application, settings, mCheckFeedbackEnabledManager)
     }
 
     companion object {
-        const val UPDRAFT_TAG = "updraft"
         private const val NOT_INITIALIZED_MESSAGE =
             "Must initialize Updraft before using getInstance()"
         private var instance: Updraft? = null
-        fun initialize(application: Application, settings: Settings, screenshotProvider: ScreenshotProvider = DefaultScreenshotProvider()) {
+        fun initialize(
+            application: Application,
+            settings: Settings,
+            screenshotProvider: ScreenshotProvider = DefaultScreenshotProvider(),
+        ) {
             createUpdraft(application, settings, screenshotProvider)
         }
 
         @Synchronized
-        private fun createUpdraft(application: Application, settings: Settings, screenshotProvider: ScreenshotProvider) {
+        private fun createUpdraft(
+            application: Application,
+            settings: Settings,
+            screenshotProvider: ScreenshotProvider,
+        ) {
             if (instance == null) {
                 instance = Updraft(application, settings, screenshotProvider)
             }

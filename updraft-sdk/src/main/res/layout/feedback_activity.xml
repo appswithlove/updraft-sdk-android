@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/updraft_feedback_root_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/updraft_feedback_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/charcoal_grey"
     android:orientation="vertical">
 
     <FrameLayout
-        android:paddingTop="@dimen/updraft_feedback_header_padding_top"
-        android:paddingStart="@dimen/updraft_feedback_header_padding_start"
-        android:paddingEnd="@dimen/updraft_feedback_header_padding_end"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/updraft_feedback_header_padding_start"
+        android:paddingTop="@dimen/updraft_feedback_header_padding_top"
+        android:paddingEnd="@dimen/updraft_feedback_header_padding_end">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -36,12 +36,9 @@
             android:src="@drawable/icn_exit_2_white" />
     </FrameLayout>
 
-
     <FrameLayout
         android:id="@+id/updraft_feedback_root_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-
+        android:layout_weight="1" />
 </LinearLayout>
-

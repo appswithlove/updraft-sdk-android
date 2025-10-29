@@ -1,57 +1,49 @@
 [versions]
-androidMavenGradlePlugin = "2.1"
-appcompat = "1.7.0"
-constraintlayout = "2.1.4"
-coreKtx = "1.13.1"
-dokkaGradlePlugin = "1.7.20"
-gradle = "8.3.2"
+gradle = "8.13.0"
+kotlin = "2.2.21"
+appcompat = "1.7.1"
+constraintlayout = "2.2.1"
+coreKtx = "1.17.0"
+dokka = "2.1.0"
 ink = "1.0.0"
+androidxStartup = "1.1.1"
+kotlinxSerializationJson = "1.9.0"
 lifecycleExtensions = "2.2.0"
-lifecycleViewmodelKtx = "2.8.2"
-loco = "0.3.1"
+lifecycleViewmodelKtx = "2.9.4"
+converterKotlinxSerialization = "3.0.0"
+loco = "0.4.1"
 loggingInterceptor = "4.12.0"
-material = "1.12.0"
-multidex = "1.0.3"
+material = "1.13.0"
 retrofit = "2.9.0"
-rxandroid = "2.1.1"
-rxjava = "2.2.21"
-updraft = "2.2.4"
-kotlin = "1.9.23"
-vanniktechMavenPublish = "0.24.0"
+updraft = "2.3.0"
+maven-publish = "0.34.0"
 coveralls = "2.4.0"
 
 [libraries]
 adapter-rxjava2 = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofit" }
-android-maven-gradle-plugin = { module = "com.github.dcendents:android-maven-gradle-plugin", version.ref = "androidMavenGradlePlugin" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "converterKotlinxSerialization" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
-dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokkaGradlePlugin" }
 ink = { module = "com.simplify:ink", version.ref = "ink" }
 kotlin-stdlib-jdk7 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lifecycle-compiler = { module = "androidx.lifecycle:lifecycle-compiler", version.ref = "lifecycleExtensions" }
 lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycleExtensions" }
 lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "lifecycleExtensions" }
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
-multidex = { module = "com.android.support:multidex", version.ref = "multidex" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-rxandroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxandroid" }
-rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-loco = { module = "com.appswithlove.loco:loco", version = "0.3.1" }
-updraft = { module = "com.appswithlove.updraft:updraft", version.ref = "updraft" }
-androidx-startup = { module = "androidx.startup:startup-runtime", version = "1.1.1" }
-androidx-annotation = { module = "androidx.annotation:annotation", version = "1.8.0" }
+androidx-startup = { module = "androidx.startup:startup-runtime", version.ref = "androidxStartup" }
 
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "gradle" }
-androidLibrary = { id = "com.android.library", version.ref = "gradle" }
-kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-updraft = { id = "com.appswithlove.updraft", version.ref = "updraft" }
-vanniktechMavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
+android-application = { id = "com.android.application", version.ref = "gradle" }
+android-library = { id = "com.android.library", version.ref = "gradle" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 coveralls = { id = "com.github.kt3k.coveralls", version.ref = "coveralls" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+updraft = { id = "com.appswithlove.updraft", version.ref = "updraft" }
 loco = { id = "com.appswithlove.loco", version.ref = "loco" }
