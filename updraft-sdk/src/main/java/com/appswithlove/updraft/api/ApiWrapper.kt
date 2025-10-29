@@ -12,8 +12,12 @@ import com.appswithlove.updraft.api.request.GetLastVersionRequest
 import com.appswithlove.updraft.api.response.CheckLastVersionResponse
 import com.appswithlove.updraft.api.response.GetLastVersionResponse
 import com.appswithlove.updraft.feedback.form.FeedbackChoice
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -21,15 +25,13 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.io.File
 
 class ApiWrapper(
     private val context: Context,
     private val settings: Settings
 ) {
-
     private val updraftService: UpdraftService
 
     init {
@@ -44,118 +46,117 @@ class ApiWrapper(
         }
         httpClientBuilder.addInterceptor(logging)
 
+        val json = Json { ignoreUnknownKeys = true }
         val retrofit = Retrofit.Builder()
             .baseUrl(settings.baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .client(httpClientBuilder.build())
             .build()
 
         updraftService = retrofit.create(UpdraftService::class.java)
     }
 
-    fun getLastVersion(): Single<GetLastVersionResponse> =
-        Single.defer {
-            val request = GetLastVersionRequest(
-                sdkKey = settings.sdkKey,
-                appKey = settings.appKey,
-            )
-            updraftService.getLastVersion(request)
-        }
+    suspend fun getLastVersion(): GetLastVersionResponse {
+        val request = GetLastVersionRequest(
+            sdkKey = settings.sdkKey,
+            appKey = settings.appKey,
+        )
+        return updraftService.getLastVersion(request)
+    }
 
-    fun checkLastVersion(): Single<CheckLastVersionResponse> =
-        Single.defer {
-            val request = CheckLastVersionRequest(
-                appKey = settings.appKey,
-                sdkKey = settings.sdkKey,
-            )
+    suspend fun checkLastVersion(): CheckLastVersionResponse {
+        val request = CheckLastVersionRequest(
+            appKey = settings.appKey,
+            sdkKey = settings.sdkKey,
+        )
 
-            val versionCode = try {
-                val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    packageInfo.longVersionCode.toInt()
-                } else {
-                    @Suppress("DEPRECATION")
-                    packageInfo.versionCode
-                }
-            } catch (e: PackageManager.NameNotFoundException) {
-                e.printStackTrace()
-                -1
-            }
-
-            if (versionCode == -1) {
-                Single.error(IllegalStateException("Version code is invalid"))
+        val versionCode = try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageInfo.longVersionCode.toInt()
             } else {
-                request.copy(
-                    version = versionCode.toString()
-                )
-                updraftService.checkLastVersion(request)
+                @Suppress("DEPRECATION")
+                packageInfo.versionCode
             }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+            -1
         }
 
-    fun isFeedbackEnabled(): Single<Boolean> =
-        Single.defer {
-            val request = FeedbackEnabledRequest(
-                appKey = settings.appKey,
-                sdkKey = settings.sdkKey,
-            )
+        if (versionCode == -1) throw IllegalStateException("Version code is invalid")
 
-            updraftService.isFeedbackEnabled(request).flatMap { response ->
-                if (response.errorCodes.isNotEmpty()) {
-                    val errorDescription = response.errorDescriptions.firstOrNull().orEmpty()
-                    Single.error(ApiException(errorDescription))
-                } else {
-                    Single.just(response.isFeedbackEnabled)
-                }
-            }
+        return updraftService.checkLastVersion(request.copy(version = versionCode.toString()))
+    }
+
+    suspend fun isFeedbackEnabled(): Boolean {
+        val request = FeedbackEnabledRequest(
+            appKey = settings.appKey,
+            sdkKey = settings.sdkKey,
+        )
+
+        val response = updraftService.isFeedbackEnabled(request)
+        if (response.errorCodes.isNotEmpty()) {
+            val errorDescription = response.errorDescriptions.firstOrNull().orEmpty()
+            throw ApiException(errorDescription)
         }
+        return response.isFeedbackEnabled
+    }
 
-    @SuppressLint("HardwareIds", "CheckResult")
+    @SuppressLint("HardwareIds")
     fun sendMobileFeedback(
         feedbackChoice: FeedbackChoice,
         description: String,
         email: String,
         fileName: String
-    ): Observable<Double> =
-        Observable.defer {
-            val request = FeedbackMobileRequest(
-                appKey = settings.appKey,
-                sdkKey = settings.sdkKey,
-                tag = feedbackChoice.apiName(),
-                image = fileName,
-                description = description,
-                email = email,
-                buildVersion = try {
-                    context.packageManager.getPackageInfo(context.packageName, 0).versionName
-                } catch (e: PackageManager.NameNotFoundException) {
-                    e.printStackTrace()
-                    ""
-                },
-                systemVersion = Build.VERSION.RELEASE,
-                deviceName = Build.MODEL,
-                deviceUuid = android.provider.Settings.Secure.getString(
-                    context.contentResolver,
-                    android.provider.Settings.Secure.ANDROID_ID
-                ),
-            )
+    ): Flow<Double> = callbackFlow {
+        val request = FeedbackMobileRequest(
+            appKey = settings.appKey,
+            sdkKey = settings.sdkKey,
+            tag = feedbackChoice.apiName(),
+            image = fileName,
+            description = description,
+            email = email,
+            buildVersion = try {
+                context.packageManager.getPackageInfo(context.packageName, 0).versionName
+            } catch (e: PackageManager.NameNotFoundException) {
+                e.printStackTrace()
+                ""
+            },
+            systemVersion = Build.VERSION.RELEASE,
+            deviceName = Build.MODEL,
+            deviceUuid = android.provider.Settings.Secure.getString(
+                context.contentResolver,
+                android.provider.Settings.Secure.ANDROID_ID
+            ),
+        )
 
-            Observable.create { emitter ->
-                try {
-                    updraftService.feedbackMobile(
-                        mapMultipart(request) { bytesWritten, contentLength ->
-                            val progress = 1.0 * bytesWritten / contentLength
-                            emitter.onNext(progress)
-                        }
-                    ).blockingGet()
-                } catch (t: Throwable) {
-                    if (settings.shouldShowErrors()) {
-                        t.printStackTrace()
-                    }
-                    emitter.onError(t)
-                }
-                emitter.onComplete()
+        val multipartMap = mapMultipart(request) { bytesWritten, contentLength ->
+            val progress = bytesWritten.toDouble() / contentLength.toDouble()
+            trySend(progress).isSuccess
+        }
+
+        try {
+            updraftService.feedbackMobile(multipartMap)
+            close()
+        } catch (t: Throwable) {
+            if (settings.shouldShowErrors()) t.printStackTrace()
+            close(t)
+        }
+
+        val uploadJob = launch {
+            try {
+                updraftService.feedbackMobile(multipartMap)
+                close()
+            } catch (t: Throwable) {
+                if (settings.shouldShowErrors()) t.printStackTrace()
+                close(t)
             }
         }
+
+        awaitClose {
+            uploadJob.cancel()
+        }
+    }
 
     private fun mapMultipart(
         request: FeedbackMobileRequest,

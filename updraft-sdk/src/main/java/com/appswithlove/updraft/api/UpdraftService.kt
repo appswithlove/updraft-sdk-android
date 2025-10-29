@@ -7,7 +7,6 @@ import com.appswithlove.updraft.api.response.CheckLastVersionResponse
 import com.appswithlove.updraft.api.response.FeedbackEnabledResponse
 import com.appswithlove.updraft.api.response.FeedbackMobileResponse
 import com.appswithlove.updraft.api.response.GetLastVersionResponse
-import io.reactivex.Single
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.Multipart
@@ -17,23 +16,23 @@ import retrofit2.http.PartMap
 interface UpdraftService {
 
     @POST("check_last_version/")
-    fun checkLastVersion(
+    suspend fun checkLastVersion(
         @Body checkLastVersionRequest: CheckLastVersionRequest,
-    ): Single<CheckLastVersionResponse>
+    ): CheckLastVersionResponse
 
     @POST("get_last_version/")
-    fun getLastVersion(
+    suspend fun getLastVersion(
         @Body getLastVersionRequest: GetLastVersionRequest,
-    ): Single<GetLastVersionResponse>
+    ): GetLastVersionResponse
 
     @Multipart
     @POST("feedback-mobile/")
-    fun feedbackMobile(
+    suspend fun feedbackMobile(
         @PartMap map: Map<String, @JvmSuppressWildcards RequestBody>,
-    ): Single<FeedbackMobileResponse>
+    ): FeedbackMobileResponse
 
     @POST("feedback-mobile-enabled/")
-    fun isFeedbackEnabled(
+    suspend fun isFeedbackEnabled(
         @Body feedbackEnabledRequest: FeedbackEnabledRequest,
-    ): Single<FeedbackEnabledResponse>
+    ): FeedbackEnabledResponse
 }

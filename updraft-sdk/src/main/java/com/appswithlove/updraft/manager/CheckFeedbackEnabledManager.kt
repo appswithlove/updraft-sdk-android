@@ -3,19 +3,19 @@ package com.appswithlove.updraft.manager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.appswithlove.updraft.interactor.CheckFeedbackEnabledInteractor
 import com.appswithlove.updraft.interactor.CheckFeedbackResultModel
 import com.appswithlove.updraft.presentation.UpdraftSdkUi
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class CheckFeedbackEnabledManager(
     private val updraftSdkUi: UpdraftSdkUi,
     private val checkFeedbackEnabledInteractor: CheckFeedbackEnabledInteractor
 ) : DefaultLifecycleObserver, ShakeDetectorManager.ShakeDetectorListener {
 
-    private var checkFeedbackDisposable: Disposable? = null
+    private var checkFeedbackJob: Job? = null
 
     fun start() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
@@ -23,41 +23,66 @@ class CheckFeedbackEnabledManager(
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        runFeedbackCheck()
+        runFeedbackCheck(owner)
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
-        checkFeedbackDisposable?.dispose()
+        checkFeedbackJob?.cancel()
     }
 
-    private fun runFeedbackCheck() {
-        checkFeedbackDisposable?.dispose()
+    private fun runFeedbackCheck(owner: LifecycleOwner) {
+        checkFeedbackJob?.cancel()
 
-        checkFeedbackDisposable = checkFeedbackEnabledInteractor.run()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ checkFeedbackResultModel ->
+        checkFeedbackJob = owner.lifecycleScope.launch {
+            try {
+                val checkFeedbackResultModel = checkFeedbackEnabledInteractor.run()
+
                 if (!checkFeedbackResultModel.isFeedbackEnabled && updraftSdkUi.isCurrentlyShowingFeedback) {
                     updraftSdkUi.closeFeedback()
-                    return@subscribe
+                    return@launch
                 }
 
                 if (checkFeedbackResultModel.showAlert) {
                     when (checkFeedbackResultModel.alertType) {
                         CheckFeedbackResultModel.ALERT_TYPE_FEEDBACK_DISABLED ->
                             updraftSdkUi.showFeedbackDisabledAlert()
+
                         CheckFeedbackResultModel.ALERT_TYPE_HOW_TO_GIVE_FEEDBACK ->
                             updraftSdkUi.showHowToGiveFeedbackAlert()
                     }
                 }
-            }, { throwable ->
-                throwable.printStackTrace()
-            })
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onShakeDetected() {
         updraftSdkUi.showFeedback()
-        runFeedbackCheck()
+
+        // Run feedback check again in a global lifecycle scope since Shake might happen outside lifecycle event
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            try {
+                val checkFeedbackResultModel = checkFeedbackEnabledInteractor.run()
+
+                if (!checkFeedbackResultModel.isFeedbackEnabled && updraftSdkUi.isCurrentlyShowingFeedback) {
+                    updraftSdkUi.closeFeedback()
+                    return@launch
+                }
+
+                if (checkFeedbackResultModel.showAlert) {
+                    when (checkFeedbackResultModel.alertType) {
+                        CheckFeedbackResultModel.ALERT_TYPE_FEEDBACK_DISABLED ->
+                            updraftSdkUi.showFeedbackDisabledAlert()
+
+                        CheckFeedbackResultModel.ALERT_TYPE_HOW_TO_GIVE_FEEDBACK ->
+                            updraftSdkUi.showHowToGiveFeedbackAlert()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

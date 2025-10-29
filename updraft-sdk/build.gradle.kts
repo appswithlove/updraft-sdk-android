@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.loco)
     alias(libs.plugins.maven.publish)
     id("base")
@@ -59,11 +60,8 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.retrofit)
-    implementation(libs.converter.gson)
     implementation(libs.adapter.rxjava2)
     implementation(libs.logging.interceptor)
-    implementation(libs.rxjava)
-    implementation(libs.rxandroid)
 
     implementation(libs.ink)
 
@@ -75,6 +73,8 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.kotlin.stdlib.jdk7)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.converter.kotlinx.serialization)
 }
 
 mavenPublishing {

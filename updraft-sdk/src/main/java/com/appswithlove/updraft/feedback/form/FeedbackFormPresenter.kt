@@ -1,72 +1,77 @@
 package com.appswithlove.updraft.feedback.form
 
-import android.os.Handler
-import android.os.Looper
 import com.appswithlove.updraft.Updraft
 import com.appswithlove.updraft.api.ApiWrapper
 import com.appswithlove.updraft.feedback.FeedbackActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class FeedbackFormPresenter {
+class FeedbackFormPresenter : CoroutineScope {
 
     private var view: FeedbackFormContract.View? = null
-    private var compositeDisposable: CompositeDisposable? = null
     private val apiWrapper: ApiWrapper? = Updraft.getInstance()?.apiWrapper
-    private var sendFeedbackDisposable: Disposable? = null
+
+    private var presenterJob: Job = SupervisorJob()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + presenterJob
+
+    private var sendJob: Job? = null
 
     fun attachView(view: FeedbackFormContract.View) {
         this.view = view
-        compositeDisposable = CompositeDisposable()
     }
 
     fun detachView() {
-        compositeDisposable?.dispose()
+        cancel()
         view = null
     }
 
     fun onSendButtonClicked() {
         val currentView = view ?: return
+        val api = apiWrapper ?: return
 
         currentView.showProgress()
 
-        val disposable = apiWrapper?.sendMobileFeedback(
-            currentView.getSelectedChoice(),
-            currentView.getDescription(),
-            currentView.getEmail(),
-            FeedbackActivity.SAVED_SCREENSHOT
-        )
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(
-                { progress -> currentView.updateProgress(progress) },
-                { t ->
-                    t.printStackTrace()
-                    currentView.showErrorMessage(t)
-                },
-                {
+        sendJob?.cancel()
+        sendJob = launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    api.sendMobileFeedback(
+                        currentView.getSelectedChoice(),
+                        currentView.getDescription(),
+                        currentView.getEmail(),
+                        FeedbackActivity.SAVED_SCREENSHOT
+                    ).collect { progress ->
+                        withContext(Dispatchers.Main) {
+                            currentView.updateProgress(progress)
+                        }
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
                     currentView.showSuccessMessage()
                     closeAfterDelay()
                 }
-            )
-
-        disposable?.let { d ->
-            compositeDisposable?.add(d)
-            sendFeedbackDisposable = d
+            } catch (_: CancellationException) {
+                // Job was cancelled, ignore
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    currentView.showErrorMessage(t)
+                }
+            }
         }
     }
 
     fun onProgressCancelClicked() {
-        sendFeedbackDisposable?.takeIf { !it.isDisposed }?.dispose()
+        sendJob?.cancel()
         view?.hideProgress()
     }
 
     private fun closeAfterDelay() {
-        Handler(Looper.getMainLooper()).postDelayed(
-            { view?.closeFeedback() },
-            1000
-        )
+        launch {
+            delay(1000)
+            view?.closeFeedback()
+        }
     }
 }
