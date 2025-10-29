@@ -135,14 +135,6 @@ class ApiWrapper(
             trySend(progress).isSuccess
         }
 
-        try {
-            updraftService.feedbackMobile(multipartMap)
-            close()
-        } catch (t: Throwable) {
-            if (settings.shouldShowErrors()) t.printStackTrace()
-            close(t)
-        }
-
         val uploadJob = launch {
             try {
                 updraftService.feedbackMobile(multipartMap)
