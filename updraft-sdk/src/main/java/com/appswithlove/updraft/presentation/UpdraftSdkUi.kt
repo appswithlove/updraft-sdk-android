@@ -107,6 +107,9 @@ class UpdraftSdkUi(
     }
 
     fun showHowToGiveFeedbackAlert() {
+        if (!mSettings.showFeedbackAlert) {
+            return
+        }
         if (currentActivity == null) {
             mShowHowToFeedbackDialogPending = true
             return
