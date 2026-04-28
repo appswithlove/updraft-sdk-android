@@ -23,5 +23,19 @@
     <string name="updraft.feedbackDisabled.title">Feedback Deaktiviert</string>
     <string name="updraft.global.error">Fehler</string>
     <string name="updraft.updateAvailable.description">Möchten Sie die neue Version herunterladen?</string>
+    <string name="updraft.updateAvailable.descriptionFull">Veröffentlicht %1$s. Sie verwenden aktuell Version %2$s.</string>
+    <string name="updraft.updateAvailable.laterButton">Später</string>
+    <string name="updraft.updateAvailable.openButton">Öffnen</string>
+    <string name="updraft.updateAvailable.releasedRelative">Veröffentlicht %1$s.</string>
     <string name="updraft.updateAvailable.title">Neue Version verfügbar</string>
+    <string name="updraft.updateAvailable.titleWithVersion">Neue Version (%1$s) verfügbar</string>
+    <string name="updraft.updateAvailable.yourVersion">Sie verwenden aktuell Version %1$s.</string>
+    <plurals name="updraft.relative.weeksAgo">
+        <item quantity="one">vor %d Woche</item>
+        <item quantity="other">vor %d Wochen</item>
+    </plurals>
+    <plurals name="updraft.relative.monthsAgo">
+        <item quantity="one">vor %d Monat</item>
+        <item quantity="other">vor %d Monaten</item>
+    </plurals>
 </resources>

@@ -1,18 +1,25 @@
 package com.appswithlove.updraft.presentation
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Typeface
+import android.text.format.DateUtils
+import android.widget.TextView
 import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import com.appswithlove.updraft.BuildConfig
 import com.appswithlove.updraft.R
 import com.appswithlove.updraft.Settings
 import com.appswithlove.updraft.Updraft.Companion.getInstance
 import com.appswithlove.updraft.feedback.FeedbackActivity
 import com.appswithlove.updraft.manager.CurrentActivityManger
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.IOException
 import androidx.core.net.toUri
 
@@ -27,6 +34,9 @@ class UpdraftSdkUi(
     private var currentActivity: Activity? = null
     private var mShowDialogPending = false
     private var mPendingUrl: String? = null
+    private var mPendingVersion: String? = null
+    private var mPendingYourVersion: String? = null
+    private var mPendingCreateAt: String? = null
     private var mListener: Listener? = null
     private var mFeedbackAlertShown = false
     var mUpdateAlertShown = false
@@ -50,25 +60,35 @@ class UpdraftSdkUi(
             return
         }
         if (!mFeedbackAlertShown) {
-            if (currentActivity == null) {
+            val activity = currentActivity
+            if (activity == null) {
                 mShowStartAlertDialogPending = true
                 return
             }
             mShowStartAlertDialogPending = false
-            val builder = AlertDialog.Builder(currentActivity)
+            val builder = MaterialAlertDialogBuilder(activity)
             builder.setTitle(R.string.updraft_feedbackDialog_title)
             builder.setMessage(R.string.updraft_feedbackDialog_description)
             builder.setCancelable(true)
             builder.setPositiveButton(R.string.updraft_button_ok) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
-            builder.show()
+            builder.show().boldTitle()
             mFeedbackAlertShown = true
         }
     }
 
-    fun showUpdateAvailableAlert(url: String) {
-        if (currentActivity == null) {
+    fun showUpdateAvailableAlert(
+        url: String,
+        version: String? = null,
+        yourVersion: String? = null,
+        createAt: String? = null,
+    ) {
+        val activity = currentActivity
+        if (activity == null) {
             mShowDialogPending = true
             mPendingUrl = url
+            mPendingVersion = version
+            mPendingYourVersion = yourVersion
+            mPendingCreateAt = createAt
             return
         }
 
@@ -78,48 +98,121 @@ class UpdraftSdkUi(
 
         mShowDialogPending = false
         mPendingUrl = null
-        val builder = AlertDialog.Builder(currentActivity)
-        builder.setPositiveButton(android.R.string.ok) { dialog: DialogInterface?, id: Int ->
+        mPendingVersion = null
+        mPendingYourVersion = null
+        mPendingCreateAt = null
+
+        val title = if (!version.isNullOrBlank()) {
+            activity.getString(R.string.updraft_updateAvailable_titleWithVersion, version)
+        } else {
+            activity.getString(R.string.updraft_updateAvailable_title)
+        }
+        val message = buildUpdateMessage(activity, yourVersion, createAt)
+
+        val builder = MaterialAlertDialogBuilder(activity)
+        builder.setPositiveButton(R.string.updraft_updateAvailable_openButton) { dialog: DialogInterface?, id: Int ->
             if (mListener != null) {
                 mListener?.onOkClicked(url)
             }
         }
-        builder.setNegativeButton(R.string.updraft_button_cancel) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
+        builder.setNegativeButton(R.string.updraft_updateAvailable_laterButton) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
         builder.setCancelable(false)
-        builder.setTitle(R.string.updraft_updateAvailable_title)
-        builder.setMessage(R.string.updraft_updateAvailable_description)
-        builder.show()
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.show().boldTitle()
         mUpdateAlertShown = true
     }
 
+    private fun buildUpdateMessage(
+        context: Context,
+        yourVersion: String?,
+        createAt: String?,
+    ): String {
+        val age = formatRelativeAge(context, createAt)
+        val hasVersion = !yourVersion.isNullOrBlank()
+        return when {
+            age != null && hasVersion ->
+                context.getString(R.string.updraft_updateAvailable_descriptionFull, age, yourVersion)
+            age != null ->
+                context.getString(R.string.updraft_updateAvailable_releasedRelative, age)
+            hasVersion ->
+                context.getString(R.string.updraft_updateAvailable_yourVersion, yourVersion)
+            else ->
+                context.getString(R.string.updraft_updateAvailable_description)
+        }
+    }
+
+    private fun formatRelativeAge(context: Context, createAt: String?): CharSequence? {
+        if (createAt.isNullOrBlank()) return null
+        val date = parseCreateAt(createAt) ?: return null
+        val now = System.currentTimeMillis()
+        val days = (now - date.time) / DateUtils.DAY_IN_MILLIS
+        return when {
+            days < 7L -> DateUtils.getRelativeTimeSpanString(
+                date.time, now, DateUtils.MINUTE_IN_MILLIS,
+            )
+            days < 30L -> {
+                val weeks = (days / 7L).toInt()
+                context.resources.getQuantityString(R.plurals.updraft_relative_weeksAgo, weeks, weeks)
+            }
+            days < 365L -> {
+                val months = (days / 30L).toInt()
+                context.resources.getQuantityString(R.plurals.updraft_relative_monthsAgo, months, months)
+            }
+            else -> DateUtils.getRelativeTimeSpanString(date.time, now, DateUtils.DAY_IN_MILLIS)
+        }
+    }
+
+    private fun parseCreateAt(createAt: String): Date? {
+        val patterns = listOf(
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd'T'HH:mm:ssXXX",
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss",
+        )
+        for (pattern in patterns) {
+            try {
+                val format = SimpleDateFormat(pattern, Locale.US).apply {
+                    timeZone = TimeZone.getTimeZone("UTC")
+                }
+                return format.parse(createAt) ?: continue
+            } catch (_: Exception) {
+                // try next pattern
+            }
+        }
+        return null
+    }
+
     fun showFeedbackDisabledAlert() {
-        if (currentActivity == null) {
+        val activity = currentActivity
+        if (activity == null) {
             mShowFeedbackDisabledDialogPending = true
             return
         }
         mShowFeedbackDisabledDialogPending = false
-        val builder = AlertDialog.Builder(currentActivity)
+        val builder = MaterialAlertDialogBuilder(activity)
         builder.setNegativeButton(R.string.updraft_button_cancel) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
         builder.setCancelable(false)
         builder.setTitle(R.string.updraft_feedbackDisabled_title)
         builder.setMessage(R.string.updraft_feedbackDisabled_description)
-        builder.show()
+        builder.show().boldTitle()
     }
 
     fun showHowToGiveFeedbackAlert() {
         if (!mSettings.showFeedbackAlert) {
             return
         }
-        if (currentActivity == null) {
+        val activity = currentActivity
+        if (activity == null) {
             mShowHowToFeedbackDialogPending = true
             return
         }
         mShowHowToFeedbackDialogPending = false
-        val builder = AlertDialog.Builder(currentActivity)
+        val builder = MaterialAlertDialogBuilder(activity)
         builder.setTitle(R.string.updraft_feedbackDialog_title)
         builder.setMessage(R.string.updraft_feedbackDialog_description)
         builder.setPositiveButton(R.string.updraft_button_ok) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
-        builder.show()
+        builder.show().boldTitle()
     }
 
     fun openUrl(url: String?) {
@@ -182,7 +275,12 @@ class UpdraftSdkUi(
             showFeedbackAlert()
         }
         if (mShowDialogPending) {
-            showUpdateAvailableAlert(mPendingUrl.orEmpty())
+            showUpdateAvailableAlert(
+                url = mPendingUrl.orEmpty(),
+                version = mPendingVersion,
+                yourVersion = mPendingYourVersion,
+                createAt = mPendingCreateAt,
+            )
         }
         if (mShowHowToFeedbackDialogPending) {
             showHowToGiveFeedbackAlert()
@@ -209,5 +307,11 @@ class UpdraftSdkUi(
 
     interface Listener {
         fun onOkClicked(url: String)
+    }
+}
+
+private fun androidx.appcompat.app.AlertDialog.boldTitle() {
+    findViewById<TextView>(androidx.appcompat.R.id.alertTitle)?.apply {
+        typeface = Typeface.create(typeface, Typeface.BOLD)
     }
 }
