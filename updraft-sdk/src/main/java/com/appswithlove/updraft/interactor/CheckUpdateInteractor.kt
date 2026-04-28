@@ -15,7 +15,10 @@ class CheckUpdateInteractor(private val apiWrapper: ApiWrapper) {
             val url = getLastVersionResponse.updateUrl
             CheckUpdateResultModel(
                 showAlert = url != null,
-                url = url
+                url = url,
+                version = checkLastVersionResponse.version,
+                yourVersion = checkLastVersionResponse.yourVersion,
+                createAt = checkLastVersionResponse.createAt,
             )
         } else {
             CheckUpdateResultModel(showAlert = false)
