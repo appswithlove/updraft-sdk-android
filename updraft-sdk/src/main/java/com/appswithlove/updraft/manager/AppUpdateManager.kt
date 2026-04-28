@@ -33,7 +33,12 @@ class AppUpdateManager(
                 val result = checkUpdateInteractor.checkUpdate()
                 val url = result.url
                 if (result.showAlert && url != null) {
-                    updraftSdkUi.showUpdateAvailableAlert(url)
+                    updraftSdkUi.showUpdateAvailableAlert(
+                        url = url,
+                        version = result.version,
+                        yourVersion = result.yourVersion,
+                        createAt = result.createAt,
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
