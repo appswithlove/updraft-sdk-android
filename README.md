@@ -26,7 +26,7 @@ Add the updraft-sdk dependency:
 ```kotlin
 // libs.versions.toml
 [versions]
-updraft-sdk = "1.1.1"
+updraft-sdk = "1.1.2"
 
 [libraries]
 updraft-sdk =  { module = "com.appswithlove.updraft:updraft-sdk", version.ref = "updraft-sdk" }

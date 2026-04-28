@@ -19,6 +19,8 @@ import com.appswithlove.updraft.Settings
 import com.appswithlove.updraft.Updraft.Companion.getInstance
 import com.appswithlove.updraft.feedback.FeedbackActivity
 import com.appswithlove.updraft.manager.CurrentActivityManger
+import androidx.appcompat.view.ContextThemeWrapper
+import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.IOException
 import androidx.core.net.toUri
@@ -66,7 +68,7 @@ class UpdraftSdkUi(
                 return
             }
             mShowStartAlertDialogPending = false
-            val builder = MaterialAlertDialogBuilder(activity)
+            val builder = MaterialAlertDialogBuilder(activity.materialDialogContext(), R.style.Updraft_AlertDialog)
             builder.setTitle(R.string.updraft_feedbackDialog_title)
             builder.setMessage(R.string.updraft_feedbackDialog_description)
             builder.setCancelable(true)
@@ -109,7 +111,7 @@ class UpdraftSdkUi(
         }
         val message = buildUpdateMessage(activity, yourVersion, createAt)
 
-        val builder = MaterialAlertDialogBuilder(activity)
+        val builder = MaterialAlertDialogBuilder(activity.materialDialogContext(), R.style.Updraft_AlertDialog)
         builder.setPositiveButton(R.string.updraft_updateAvailable_openButton) { dialog: DialogInterface?, id: Int ->
             if (mListener != null) {
                 mListener?.onOkClicked(url)
@@ -148,6 +150,8 @@ class UpdraftSdkUi(
         val now = System.currentTimeMillis()
         val days = (now - date.time) / DateUtils.DAY_IN_MILLIS
         return when {
+            now - date.time < DateUtils.MINUTE_IN_MILLIS ->
+                context.getString(R.string.updraft_relative_justNow)
             days < 7L -> DateUtils.getRelativeTimeSpanString(
                 date.time, now, DateUtils.MINUTE_IN_MILLIS,
             )
@@ -190,7 +194,7 @@ class UpdraftSdkUi(
             return
         }
         mShowFeedbackDisabledDialogPending = false
-        val builder = MaterialAlertDialogBuilder(activity)
+        val builder = MaterialAlertDialogBuilder(activity.materialDialogContext(), R.style.Updraft_AlertDialog)
         builder.setNegativeButton(R.string.updraft_button_cancel) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
         builder.setCancelable(false)
         builder.setTitle(R.string.updraft_feedbackDisabled_title)
@@ -208,7 +212,7 @@ class UpdraftSdkUi(
             return
         }
         mShowHowToFeedbackDialogPending = false
-        val builder = MaterialAlertDialogBuilder(activity)
+        val builder = MaterialAlertDialogBuilder(activity.materialDialogContext(), R.style.Updraft_AlertDialog)
         builder.setTitle(R.string.updraft_feedbackDialog_title)
         builder.setMessage(R.string.updraft_feedbackDialog_description)
         builder.setPositiveButton(R.string.updraft_button_ok) { dialog: DialogInterface, which: Int -> dialog.dismiss() }
@@ -315,3 +319,7 @@ private fun androidx.appcompat.app.AlertDialog.boldTitle() {
         typeface = Typeface.create(typeface, Typeface.BOLD)
     }
 }
+
+private fun Activity.materialDialogContext(): Context =
+    ContextThemeWrapper(this, MaterialR.style.Theme_Material3_Light)
+
