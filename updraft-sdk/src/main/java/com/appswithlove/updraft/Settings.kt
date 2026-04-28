@@ -17,7 +17,7 @@ class Settings {
 
     companion object {
         const val BASE_URL_STAGING = "https://u2.mqd.me/api/"
-        const val BASE_URL_PROD = "https://getupdraft.com/api/"
+        const val BASE_URL_PROD = "https://app.getupdraft.com/api/"
         const val LOG_LEVEL_NONE = 0
         const val LOG_LEVEL_ERROR = 1
         const val LOG_LEVEL_DEBUG = 2
