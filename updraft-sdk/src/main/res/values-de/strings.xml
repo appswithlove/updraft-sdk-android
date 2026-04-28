@@ -30,6 +30,7 @@
     <string name="updraft.updateAvailable.title">Neue Version verfügbar</string>
     <string name="updraft.updateAvailable.titleWithVersion">Neue Version (%1$s) verfügbar</string>
     <string name="updraft.updateAvailable.yourVersion">Sie verwenden aktuell Version %1$s.</string>
+    <string name="updraft.relative.justNow">gerade eben</string>
     <plurals name="updraft.relative.weeksAgo">
         <item quantity="one">vor %d Woche</item>
         <item quantity="other">vor %d Wochen</item>
