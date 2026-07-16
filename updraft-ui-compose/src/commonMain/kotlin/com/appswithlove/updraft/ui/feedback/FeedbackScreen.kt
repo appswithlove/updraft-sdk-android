@@ -28,6 +28,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.appswithlove.updraft.FeedbackType
 import com.appswithlove.updraft.Updraft
@@ -36,6 +38,13 @@ import com.appswithlove.updraft.ui.drawing.DrawingController
 import com.appswithlove.updraft.ui.resources.Res
 import com.appswithlove.updraft.ui.resources.updraft_button_cancel
 import com.appswithlove.updraft.ui.resources.updraft_button_ok
+import com.appswithlove.updraft.ui.resources.updraft_button_redo
+import com.appswithlove.updraft.ui.resources.updraft_button_sendFeedback
+import com.appswithlove.updraft.ui.resources.updraft_button_undo
+import com.appswithlove.updraft.ui.resources.updraft_feedback_description_label
+import com.appswithlove.updraft.ui.resources.updraft_feedback_email_placeholder
+import com.appswithlove.updraft.ui.resources.updraft_feedback_send_failure_description
+import com.appswithlove.updraft.ui.resources.updraft_feedback_type_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -54,6 +63,7 @@ fun FeedbackScreen(
     }
     val drawingController = remember { DrawingController() }
     var annotating by remember { mutableStateOf(screenshotPng != null) }
+    var canvasSize by remember { mutableStateOf(IntSize.Zero) }
 
     LaunchedEffect(state.result) {
         if (state.result?.isSuccess == true) onClose()
@@ -61,10 +71,11 @@ fun FeedbackScreen(
 
     Surface(modifier = Modifier.fillMaxSize()) {
         if (annotating && screenshotPng != null) {
+            val screenshotBitmap = remember(screenshotPng) { decodePng(screenshotPng) }
             Column(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.weight(1f)) {
+                Box(modifier = Modifier.weight(1f).onSizeChanged { canvasSize = it }) {
                     Image(
-                        bitmap = decodePng(screenshotPng),
+                        bitmap = screenshotBitmap,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -74,8 +85,14 @@ fun FeedbackScreen(
                     modifier = Modifier.fillMaxWidth().padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    TextButton(onClick = { drawingController.undo() }, enabled = drawingController.canUndo) { Text("Undo") }
-                    TextButton(onClick = { drawingController.redo() }, enabled = drawingController.canRedo) { Text("Redo") }
+                    TextButton(
+                        onClick = { drawingController.undo() },
+                        enabled = drawingController.canUndo,
+                    ) { Text(stringResource(Res.string.updraft_button_undo)) }
+                    TextButton(
+                        onClick = { drawingController.redo() },
+                        enabled = drawingController.canRedo,
+                    ) { Text(stringResource(Res.string.updraft_button_redo)) }
                     Button(onClick = { annotating = false }) { Text(stringResource(Res.string.updraft_button_ok)) }
                 }
             }
@@ -88,20 +105,23 @@ fun FeedbackScreen(
                 OutlinedTextField(
                     value = state.description,
                     onValueChange = { state.description = it },
-                    label = { Text("Description") },
+                    label = { Text(stringResource(Res.string.updraft_feedback_description_label)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = state.email,
                     onValueChange = { state.email = it },
-                    label = { Text("Email") },
+                    label = { Text(stringResource(Res.string.updraft_feedback_email_placeholder)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 state.uploadProgress?.let { progress ->
                     LinearProgressIndicator(progress = { progress.toFloat() }, modifier = Modifier.fillMaxWidth())
                 }
                 if (state.result?.isFailure == true) {
-                    Text("Upload failed. Please try again.", color = MaterialTheme.colorScheme.error)
+                    Text(
+                        stringResource(Res.string.updraft_feedback_send_failure_description),
+                        color = MaterialTheme.colorScheme.error,
+                    )
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     TextButton(onClick = onClose) { Text(stringResource(Res.string.updraft_button_cancel)) }
@@ -110,14 +130,18 @@ fun FeedbackScreen(
                         onClick = {
                             val base = screenshotPng ?: ByteArray(0)
                             val annotated = if (screenshotPng != null) {
-                                renderAnnotated(base, drawingController.paths)
+                                renderAnnotated(base, drawingController.paths, canvasSize)
                             } else {
                                 base
                             }
                             state.sendFeedback(annotated)
                         },
                     ) {
-                        if (state.uploadProgress != null) CircularProgressIndicator() else Text("Send")
+                        if (state.uploadProgress != null) {
+                            CircularProgressIndicator()
+                        } else {
+                            Text(stringResource(Res.string.updraft_button_sendFeedback))
+                        }
                     }
                 }
             }
@@ -134,7 +158,7 @@ private fun FeedbackTypeDropdown(selected: FeedbackType?, onSelect: (FeedbackTyp
             value = selected?.name ?: "",
             onValueChange = {},
             readOnly = true,
-            label = { Text("Type") },
+            label = { Text(stringResource(Res.string.updraft_feedback_type_title)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier.menuAnchor().fillMaxWidth(),
         )

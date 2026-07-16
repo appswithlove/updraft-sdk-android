@@ -4,7 +4,10 @@
     <string name="updraft_button_next">Nächste</string>
     <string name="updraft_button_ok">OK</string>
     <string name="updraft_button_previous">Vorherige</string>
+    <string name="updraft_button_redo">Wiederholen</string>
     <string name="updraft_button_sendFeedback">Feedback senden</string>
+    <string name="updraft_button_undo">Rückgängig</string>
+    <string name="updraft_feedback_description_label">Beschreibung</string>
     <string name="updraft_feedback_description_placeholder">Beschreiben Sie das Thema...</string>
     <string name="updraft_feedback_drawDescription">Draw\nsomething\nhere...</string>
     <string name="updraft_feedback_email_placeholder">Ihre E-Mail</string>
