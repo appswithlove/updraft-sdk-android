@@ -28,6 +28,7 @@ private class AndroidShakeDetector(private val onShake: () -> Unit) :
     }
 
     override fun stop() {
+        ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
         sensorManager.unregisterListener(this)
     }
 
