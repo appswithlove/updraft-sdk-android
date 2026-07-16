@@ -108,12 +108,14 @@ class UpdraftApi(
                 client.post(url("feedback-mobile/")) {
                     setBody(MultiPartFormDataContent(form))
                     onUpload { bytesSentTotal, contentLength ->
-                        if (contentLength != null && contentLength > 0 && bytesSentTotal < contentLength) {
+                        if (contentLength != null && contentLength > 0) {
                             trySend(bytesSentTotal.toDouble() / contentLength.toDouble())
                         }
                     }
                 }
                 close()
+            } catch (t: kotlin.coroutines.cancellation.CancellationException) {
+                throw t
             } catch (t: Throwable) {
                 close(t)
             }

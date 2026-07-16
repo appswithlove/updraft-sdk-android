@@ -24,8 +24,6 @@ class UpdraftApiTest {
     private val settings = UpdraftSettings(appKey = "APP", sdkKey = "SDK", baseUrl = "https://example.com/api/")
     private val appInfo = AppInfo(42L, "1.2.3", "16", "Pixel", "uuid-1")
 
-    private fun jsonResponse(body: String) = headersOf(HttpHeaders.ContentType, "application/json") to body
-
     @Test
     fun checkLastVersion_sendsKeysAndVersionCode() = runTest {
         var requestBody = ""
@@ -72,6 +70,7 @@ class UpdraftApiTest {
         UpdraftApi(settings, appInfo, engine)
             .sendFeedback(byteArrayOf(1, 2, 3), FeedbackType.Bug, "desc", "a@b.c")
             .test {
+                assertEquals(1.0, awaitItem())
                 awaitComplete()
             }
         assertTrue(contentType.startsWith("multipart/form-data"))
