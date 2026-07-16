@@ -48,7 +48,7 @@ class LegacyUpdraft private constructor(
 
     companion object {
         private const val NOT_INITIALIZED_MESSAGE =
-            "Must initialize Updraft before using getInstance()"
+            "Must initialize LegacyUpdraft before using getInstance()"
         private var instance: LegacyUpdraft? = null
         fun initialize(
             application: Application,

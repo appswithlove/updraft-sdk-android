@@ -44,6 +44,7 @@ class UpdraftControllerTest {
 
         controller.events.test {
             controller.onForeground()
+            assertIs<UpdraftEvent.ShowFeedbackHint>(awaitItem())
             val event = awaitItem()
             val update = assertIs<UpdraftEvent.UpdateAvailable>(event)
             assertEquals("https://u", update.url)
@@ -59,6 +60,7 @@ class UpdraftControllerTest {
 
         controller.events.test {
             controller.onForeground()
+            assertIs<UpdraftEvent.ShowFeedbackHint>(awaitItem())
             assertIs<UpdraftEvent.FeedbackDisabled>(awaitItem())
             cancelAndIgnoreRemainingEvents()
         }

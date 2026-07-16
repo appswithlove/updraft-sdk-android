@@ -34,11 +34,16 @@ internal class UpdraftController(
     val events: SharedFlow<UpdraftEvent> = _events
 
     private var updateAlertShown = false
+    private var feedbackHintShown = false
     private var pendingScreenshot: ByteArray? = null
 
     var feedbackUiPresenter: FeedbackUiPresenter? = null
 
     fun onForeground() {
+        if (settings.showFeedbackAlert && settings.feedbackEnabled && !feedbackHintShown) {
+            feedbackHintShown = true
+            _events.tryEmit(UpdraftEvent.ShowFeedbackHint)
+        }
         checkForUpdate()
         checkFeedbackEnabled()
     }
