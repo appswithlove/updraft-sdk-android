@@ -32,11 +32,18 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
+interface UpdraftApiContract {
+    suspend fun checkLastVersion(): CheckLastVersionResponse
+    suspend fun getLastVersion(): GetLastVersionResponse
+    suspend fun isFeedbackEnabled(): Boolean
+    fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String): Flow<Double>
+}
+
 class UpdraftApi(
     private val settings: UpdraftSettings,
     private val appInfo: AppInfo,
     engine: HttpClientEngine? = null,
-) {
+) : UpdraftApiContract {
     private val client: HttpClient = (engine?.let { HttpClient(it) } ?: HttpClient()).config {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -48,7 +55,7 @@ class UpdraftApi(
 
     private fun url(path: String) = settings.baseUrl + path
 
-    suspend fun checkLastVersion(): CheckLastVersionResponse {
+    override suspend fun checkLastVersion(): CheckLastVersionResponse {
         check(appInfo.versionCode >= 0) { "Version code is invalid" }
         val request = CheckLastVersionRequest(
             sdkKey = settings.sdkKey,
@@ -61,13 +68,13 @@ class UpdraftApi(
         }.body()
     }
 
-    suspend fun getLastVersion(): GetLastVersionResponse =
+    override suspend fun getLastVersion(): GetLastVersionResponse =
         client.post(url("get_last_version/")) {
             contentType(ContentType.Application.Json)
             setBody(GetLastVersionRequest(sdkKey = settings.sdkKey, appKey = settings.appKey))
         }.body()
 
-    suspend fun isFeedbackEnabled(): Boolean {
+    override suspend fun isFeedbackEnabled(): Boolean {
         val response: FeedbackEnabledResponse = client.post(url("feedback-mobile-enabled/")) {
             contentType(ContentType.Application.Json)
             setBody(FeedbackEnabledRequest(sdkKey = settings.sdkKey, appKey = settings.appKey))
@@ -78,7 +85,7 @@ class UpdraftApi(
         return response.isFeedbackEnabled
     }
 
-    fun sendFeedback(
+    override fun sendFeedback(
         screenshotPng: ByteArray,
         type: FeedbackType,
         description: String,
