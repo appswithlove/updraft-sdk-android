@@ -7,6 +7,7 @@ import androidx.startup.Initializer
 class UpdraftCoreInitializer : Initializer<UpdraftContext> {
     override fun create(context: Context): UpdraftContext {
         UpdraftContext.application = context.applicationContext as Application
+        UpdraftContext.application.registerActivityLifecycleCallbacks(CurrentActivityManager)
         return UpdraftContext
     }
 
