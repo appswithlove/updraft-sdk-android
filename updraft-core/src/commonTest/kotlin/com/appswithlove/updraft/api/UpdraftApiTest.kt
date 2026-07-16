@@ -78,4 +78,16 @@ class UpdraftApiTest {
         assertTrue(bodyText.contains("bug"))
         assertTrue(bodyText.contains("Pixel"))
     }
+
+    @Test
+    fun sendFeedback_httpError_flowFailsWithError() = runTest {
+        val engine = MockEngine {
+            respond("Bad Request", HttpStatusCode.BadRequest)
+        }
+        UpdraftApi(settings, appInfo, engine)
+            .sendFeedback(byteArrayOf(1, 2, 3), FeedbackType.Bug, "desc", "a@b.c")
+            .test {
+                awaitError()
+            }
+    }
 }

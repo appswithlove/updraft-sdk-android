@@ -165,6 +165,10 @@ Updraft.setFeedbackUiPresenter { screenshotPng ->
 // From your own UI, once the user submits feedback:
 Updraft.sendFeedback(screenshot, type, description, email)
     .collect { progress -> /* upload progress, 0.0..1.0 */ }
+
+// Once your feedback UI closes (submitted, cancelled, or dismissed), you MUST call this to
+// re-arm shake-to-report detection. Without it, shaking the device again won't trigger feedback.
+Updraft.onFeedbackUiClosed()
 ```
 
 Subscribe to `Updraft.events: SharedFlow<UpdraftEvent>` to react to update prompts, feedback hints, and errors in your own UI layer.
@@ -181,7 +185,11 @@ fun App() {
     // Renders update/feedback-hint dialogs as an overlay; call anywhere in your Compose tree.
     UpdraftEventHost(
         events = Updraft.events,
-        onFeedbackRequested = { /* navigate to your feedback screen/route */ },
+        onFeedbackRequested = {
+            // Obtain the screenshot captured for this request, then navigate to your feedback screen/route.
+            val screenshotPng = Updraft.takePendingScreenshot()
+            navigateToFeedback(screenshotPng)
+        },
     )
 
     // your app content
@@ -189,7 +197,14 @@ fun App() {
 
 @Composable
 fun FeedbackRoute(screenshotPng: ByteArray?, onClose: () -> Unit) {
-    FeedbackScreen(screenshotPng = screenshotPng, onClose = onClose)
+    FeedbackScreen(
+        screenshotPng = screenshotPng,
+        onClose = {
+            onClose()
+            // Re-arms shake-to-report detection.
+            Updraft.onFeedbackUiClosed()
+        },
+    )
 }
 ```
 

@@ -157,7 +157,10 @@ object Updraft {
         shakeDetector?.setEnabled(true)
     }
 
-    /** For SDK-internal UI hosts. Returns the screenshot captured for the pending feedback request, once. */
+    /**
+     * Returns the screenshot captured for the pending feedback request, once.
+     * Call from your feedback UI host when handling [UpdraftEvent.FeedbackRequested].
+     */
     fun takePendingScreenshot(): ByteArray? = requireController().takePendingScreenshot()
 
     private fun requireController(): UpdraftController =

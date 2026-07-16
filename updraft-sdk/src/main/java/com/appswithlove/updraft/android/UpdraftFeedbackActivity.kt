@@ -13,11 +13,9 @@ class UpdraftFeedbackActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val screenshot = pendingScreenshot
-        pendingScreenshot = null
         setContent {
             FeedbackScreen(
-                screenshotPng = screenshot,
+                screenshotPng = pendingScreenshot,
                 onClose = { finish() },
             )
         }
@@ -25,7 +23,10 @@ class UpdraftFeedbackActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Updraft.onFeedbackUiClosed()
+        if (!isChangingConfigurations) {
+            pendingScreenshot = null
+            Updraft.onFeedbackUiClosed()
+        }
     }
 
     companion object {

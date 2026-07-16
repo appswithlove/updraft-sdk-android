@@ -45,6 +45,7 @@ class UpdraftApi(
     engine: HttpClientEngine? = null,
 ) : UpdraftApiContract {
     private val client: HttpClient = (engine?.let { HttpClient(it) } ?: HttpClient()).config {
+        expectSuccess = true
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
         }
