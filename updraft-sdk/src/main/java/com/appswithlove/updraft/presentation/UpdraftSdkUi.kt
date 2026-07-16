@@ -16,7 +16,7 @@ import java.util.TimeZone
 import com.appswithlove.updraft.BuildConfig
 import com.appswithlove.updraft.R
 import com.appswithlove.updraft.Settings
-import com.appswithlove.updraft.Updraft.Companion.getInstance
+import com.appswithlove.updraft.LegacyUpdraft.Companion.getInstance
 import com.appswithlove.updraft.feedback.FeedbackActivity
 import com.appswithlove.updraft.manager.CurrentActivityManger
 import androidx.appcompat.view.ContextThemeWrapper

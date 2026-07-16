@@ -1,6 +1,6 @@
 package com.appswithlove.updraft.feedback.form
 
-import com.appswithlove.updraft.Updraft
+import com.appswithlove.updraft.LegacyUpdraft
 import com.appswithlove.updraft.api.ApiWrapper
 import com.appswithlove.updraft.feedback.FeedbackActivity
 import kotlinx.coroutines.*
@@ -9,7 +9,7 @@ import kotlin.coroutines.CoroutineContext
 class FeedbackFormPresenter : CoroutineScope {
 
     private var view: FeedbackFormContract.View? = null
-    private val apiWrapper: ApiWrapper? = Updraft.getInstance()?.apiWrapper
+    private val apiWrapper: ApiWrapper? = LegacyUpdraft.getInstance()?.apiWrapper
 
     private var presenterJob: Job = SupervisorJob()
     override val coroutineContext: CoroutineContext

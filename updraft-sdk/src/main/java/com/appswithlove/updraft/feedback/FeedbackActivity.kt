@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.appswithlove.updraft.Updraft
+import com.appswithlove.updraft.LegacyUpdraft
 import com.appswithlove.updraft.databinding.FeedbackActivityBinding
 import com.appswithlove.updraft.feedback.drawing.UpdraftDrawingFragment
 import com.appswithlove.updraft.feedback.form.FeedbackFormFragment
@@ -64,11 +64,11 @@ class FeedbackActivity : AppCompatActivity(), FeedbackRootContainer {
 
     override fun onStart() {
         super.onStart()
-        Updraft.getInstance()?.shakeDetectorManager?.stopListening()
+        LegacyUpdraft.getInstance()?.shakeDetectorManager?.stopListening()
     }
 
     override fun onStop() {
-        Updraft.getInstance()?.shakeDetectorManager?.startListening()
+        LegacyUpdraft.getInstance()?.shakeDetectorManager?.startListening()
         super.onStop()
     }
 

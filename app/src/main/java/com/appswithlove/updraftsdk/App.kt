@@ -2,7 +2,7 @@ package com.appswithlove.updraftsdk
 
 import android.app.Application
 import com.appswithlove.updraft.Settings
-import com.appswithlove.updraft.Updraft
+import com.appswithlove.updraft.LegacyUpdraft
 
 /**
  * Created by satori on 3/27/18.
@@ -19,7 +19,7 @@ class App : Application() {
             feedbackEnabled = true
         }
 
-        Updraft.initialize(this, settings)
-        Updraft.getInstance()?.start()
+        LegacyUpdraft.initialize(this, settings)
+        LegacyUpdraft.getInstance()?.start()
     }
 }

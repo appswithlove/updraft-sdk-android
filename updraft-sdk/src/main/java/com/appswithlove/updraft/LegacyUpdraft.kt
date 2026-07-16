@@ -15,7 +15,7 @@ import com.appswithlove.updraft.presentation.UpdraftSdkUi
 /**
  * Created by satori on 3/27/18.
  */
-class Updraft private constructor(
+class LegacyUpdraft private constructor(
     application: Application,
     private val settings: Settings,
     screenshotProvider: ScreenshotProvider,
@@ -49,7 +49,7 @@ class Updraft private constructor(
     companion object {
         private const val NOT_INITIALIZED_MESSAGE =
             "Must initialize Updraft before using getInstance()"
-        private var instance: Updraft? = null
+        private var instance: LegacyUpdraft? = null
         fun initialize(
             application: Application,
             settings: Settings,
@@ -65,7 +65,7 @@ class Updraft private constructor(
             screenshotProvider: ScreenshotProvider,
         ) {
             if (instance == null) {
-                instance = Updraft(application, settings, screenshotProvider)
+                instance = LegacyUpdraft(application, settings, screenshotProvider)
             }
         }
 
@@ -74,7 +74,7 @@ class Updraft private constructor(
         }
 
         @JvmStatic
-        fun getInstance(): Updraft? {
+        fun getInstance(): LegacyUpdraft? {
             checkInitialized()
             return instance
         }
