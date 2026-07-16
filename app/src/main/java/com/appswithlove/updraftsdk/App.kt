@@ -1,25 +1,27 @@
 package com.appswithlove.updraftsdk
 
 import android.app.Application
-import com.appswithlove.updraft.Settings
-import com.appswithlove.updraft.LegacyUpdraft
+import com.appswithlove.updraft.LogLevel
+import com.appswithlove.updraft.Updraft
+import com.appswithlove.updraft.UpdraftSettings
 
-/**
- * Created by satori on 3/27/18.
- */
 class App : Application() {
+
     override fun onCreate() {
         super.onCreate()
-        val settings = Settings().apply {
-            appKey = "" //APP_KEY
-            sdkKey = "" // SDK_KEY
-            isStoreRelease = false
-            logLevel = Settings.LOG_LEVEL_DEBUG
-            showFeedbackAlert = false
-            feedbackEnabled = true
-        }
+        Updraft.start(
+            UpdraftSettings(
+                appKey = APP_KEY,
+                sdkKey = SDK_KEY,
+                baseUrl = UpdraftSettings.BASE_URL_STAGING,
+                logLevel = LogLevel.Debug,
+                showFeedbackAlert = true,
+            ),
+        )
+    }
 
-        LegacyUpdraft.initialize(this, settings)
-        LegacyUpdraft.getInstance()?.start()
+    companion object {
+        private const val APP_KEY = ""
+        private const val SDK_KEY = ""
     }
 }
