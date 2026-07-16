@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.loco)
     alias(libs.plugins.maven.publish)
     id("base")
 }
@@ -36,7 +35,6 @@ android {
 
     buildFeatures {
         buildConfig = true
-        viewBinding = true
     }
 
     compileOptions {
@@ -55,43 +53,15 @@ android {
 
 dependencies {
     api(project(":updraft-core"))
-
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
-    implementation(libs.appcompat)
-    implementation(libs.material)
-
-    implementation(libs.retrofit)
-    implementation(libs.adapter.rxjava2)
-    implementation(libs.logging.interceptor)
-
-    implementation(libs.ink)
-
-    implementation(libs.lifecycle.extensions)
-    implementation(libs.lifecycle.runtime)
-    annotationProcessor(libs.lifecycle.compiler)
-    implementation(libs.androidx.startup)
-
+    api(project(":updraft-ui-compose"))
     implementation(libs.core.ktx)
-    implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.kotlin.stdlib.jdk7)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.androidx.startup)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.ui)
 }
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
     signAllPublications()
-}
-
-Loco {
-    config {
-        apiKey = "sOLd6p87EQ9zFoOeI8ytGBvGhKNIFo4f"
-        lang = listOf("en", "de")
-        defLang = "en"
-        resDir = "$projectDir/src/main/res"
-        fallbackLang = "en"
-        orderByAssetId = true
-        hideComments = true
-    }
 }

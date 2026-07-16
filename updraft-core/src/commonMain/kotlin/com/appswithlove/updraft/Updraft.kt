@@ -157,7 +157,8 @@ object Updraft {
         shakeDetector?.setEnabled(true)
     }
 
-    internal fun takePendingScreenshot(): ByteArray? = requireController().takePendingScreenshot()
+    /** For SDK-internal UI hosts. Returns the screenshot captured for the pending feedback request, once. */
+    fun takePendingScreenshot(): ByteArray? = requireController().takePendingScreenshot()
 
     private fun requireController(): UpdraftController =
         checkNotNull(controller) { "Must call Updraft.start() first" }
