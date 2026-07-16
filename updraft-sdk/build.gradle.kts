@@ -54,6 +54,8 @@ android {
 }
 
 dependencies {
+    api(project(":updraft-core"))
+
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     implementation(libs.appcompat)
