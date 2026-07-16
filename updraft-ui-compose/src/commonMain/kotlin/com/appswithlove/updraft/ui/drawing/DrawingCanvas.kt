@@ -21,15 +21,18 @@ fun DrawingCanvas(controller: DrawingController, modifier: Modifier = Modifier) 
                     val down = awaitPointerEvent().changes.firstOrNull { it.pressed } ?: continue
                     controller.startPath(down.position)
                     down.consume()
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        val change = event.changes.firstOrNull() ?: break
-                        if (!change.pressed) {
-                            controller.endPath()
-                            break
+                    try {
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                            if (!change.pressed) {
+                                break
+                            }
+                            controller.addPoint(change.position)
+                            change.consume()
                         }
-                        controller.addPoint(change.position)
-                        change.consume()
+                    } finally {
+                        controller.endPath()
                     }
                 }
             }
