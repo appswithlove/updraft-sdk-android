@@ -28,7 +28,7 @@ class UpdraftApiTest {
     fun checkLastVersion_sendsKeysAndVersionCode() = runTest {
         var requestBody = ""
         val engine = MockEngine { request ->
-            requestBody = String(request.body.toByteArray())
+            requestBody = request.body.toByteArray().decodeToString()
             assertEquals("/api/check_last_version/", request.url.encodedPath)
             respond(
                 """{"is_new_version":true,"is_autoupdate_enabled":true,"version":"9"}""",
@@ -63,7 +63,7 @@ class UpdraftApiTest {
         var bodyText = ""
         val engine = MockEngine { request ->
             contentType = request.body.contentType.toString()
-            bodyText = String(request.body.toByteArray())
+            bodyText = request.body.toByteArray().decodeToString()
             assertEquals("/api/feedback-mobile/", request.url.encodedPath)
             respond("""{}""", HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
         }
