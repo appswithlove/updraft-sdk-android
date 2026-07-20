@@ -14,6 +14,17 @@ kotlin {
         }
     }
 
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+        iosX64(),
+    ).forEach { target ->
+        target.binaries.framework {
+            baseName = "UpdraftCore"
+            isStatic = true
+        }
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -34,6 +45,9 @@ kotlin {
             implementation(libs.androidx.startup)
             implementation(libs.lifecycle.process)
             implementation(libs.core.ktx)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
