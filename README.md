@@ -18,6 +18,7 @@ Updraft is built by App Agencies [Apps with love](https://appswithlove.com/) and
 ## Requirements
 
 - minSdkVersion >=23
+- iOS 14.0+ (for `updraft-core` / `updraft-ui-compose` iOS targets)
 
 ## Installation
 
@@ -70,7 +71,9 @@ kotlin {
 }
 ```
 
-> iOS targets are not published yet — they land in a follow-up milestone (M2), which also adds an XCFramework and deprecates `updraft-sdk-ios`.
+`updraft-core` and `updraft-ui-compose` publish `iosArm64`/`iosSimulatorArm64`/`iosX64` targets alongside `androidTarget`, so the same dependency works from a KMP or Compose Multiplatform `commonMain` source set on both platforms. Pure-Swift consumers that don't want Kotlin/Compose tooling use the `UpdraftCore.xcframework` instead — see [Swift integration](#swift-integration) below. `updraft-sdk` (the all-in-one artifact) is Android-only.
+
+`updraft-sdk-ios` is superseded by this SDK once 2.0.0 ships. Archiving that repo and adding a final README banner there are release-time actions, tracked in [`docs/kmp-migration-m1-status.md`](docs/kmp-migration-m1-status.md).
 
 ## Setup
 
@@ -208,6 +211,22 @@ fun FeedbackRoute(screenshotPng: ByteArray?, onClose: () -> Unit) {
 }
 ```
 
+### iOS
+
+Both setups above work unchanged in `iosMain` — `Updraft.start`, `Updraft.events`, `Updraft.setFeedbackUiPresenter`, `Updraft.sendFeedback`, etc. are the same `commonMain` API on iOS as on Android. There's no iOS-specific initialization step; call `Updraft.start(...)` once from your shared Kotlin entry point (e.g. the function your `iOSApp.swift` calls on launch).
+
+Compose Multiplatform apps that added `updraft-ui-compose` get the built-in feedback UI wired up for free on iOS via `UpdraftIos.autoWire()` — it presents the update/feedback dialogs and the feedback screen on top of the current key window, no `UpdraftEventHost` needed:
+
+```kotlin
+// commonMain or iosMain, called once from your app's iOS entry point
+fun startUpdraft() {
+    Updraft.start(UpdraftSettings(appKey = APP_KEY, sdkKey = SDK_KEY))
+    UpdraftIos.autoWire()
+}
+```
+
+Shake detection uses `CMMotionManager` (accelerometer), which needs no `Info.plist` permission entry.
+
 ### Swift integration
 
 `updraft-core` builds an `UpdraftCore.xcframework` for pure-Swift consumers that don't want to pull in Kotlin/Compose tooling:
@@ -217,6 +236,28 @@ fun FeedbackRoute(screenshotPng: ByteArray?, onClose: () -> Unit) {
 ```
 
 The framework is written to `updraft-core/build/XCFrameworks/release/UpdraftCore.xcframework`. Drag it into an Xcode project or wrap it as an SPM binary target; how it's distributed (e.g. published alongside a release, hosted as a zip) is a release-time decision, out of scope for M2.
+
+`UpdraftCore.xcframework` exposes the same `commonMain` API as above — `Updraft`, `UpdraftSettings`, `Updraft.events`, etc. — callable from Swift:
+
+```swift
+import UpdraftCore
+
+Updraft.shared.start(
+    settings: UpdraftSettings(
+        appKey: APP_KEY,
+        sdkKey: SDK_KEY,
+        baseUrl: UpdraftSettings.companion.BASE_URL_PROD,
+        logLevel: .error,
+        showFeedbackAlert: true,
+        feedbackEnabled: true,
+        storeRelease: false
+    )
+)
+```
+
+Kotlin default parameter values aren't exposed to the generated Objective-C/Swift header, so every `UpdraftSettings` argument must be passed explicitly from Swift (unlike Kotlin callers, which can rely on the defaults shown in [Setup](#setup)).
+
+Since this framework only wraps `updraft-core`, it does not include the built-in Compose feedback UI (`updraft-ui-compose`, incl. `UpdraftFeedbackViewController`) — a pure-Swift, non-Compose app builds its own feedback screen and drives it via `Updraft.setFeedbackUiPresenter` / `Updraft.sendFeedback`, the same way an `updraft-core`-only Android/KMP app does. `UpdraftFeedbackViewController` and `UpdraftIos.autoWire()` are only reachable from a Kotlin/Compose Multiplatform app's own shared Kotlin code, as in the [`iOS` section](#ios) above.
 
 ## Local Development
 

@@ -57,3 +57,35 @@ Full build + all unit tests green. Final adversarial whole-branch review: READY 
 ## Dev environment note
 
 Git commits are SSH-signed via 1Password; the signing agent intermittently fails (`1Password: failed to fill whole buffer`). Unlock/approve 1Password and retry — no config change needed.
+
+## M2 status (2026-07-21)
+
+Branch: `feature/kmp-migration-m2` (unmerged).
+
+### What M2 delivered
+
+- **iOS targets + actuals** on `:updraft-core` (`iosArm64`, `iosSimulatorArm64`, `iosX64`): `IosShakeDetector` (`CMMotionManager` accelerometer, no permission entry needed), `IosScreenshotGrabber` (key-window render to PNG), `IosForegroundObserver` (`UIApplicationDidBecomeActive`/`DidEnterBackground`), `KeyValueStore`/`AppInfo` actuals.
+- **`:updraft-ui-compose` iOS target**: same Compose feedback UI (`FeedbackScreen`, dialogs) compiled for iOS via Compose Multiplatform; `com.appswithlove.updraft.ui.ios.UpdraftIos.autoWire()` auto-presents dialogs/feedback screen on the topmost view controller, and `UpdraftFeedbackViewController(screenshotPng, onClose)` is exposed for manual hosting.
+- **Sample**: `app/` renamed to `sample/` — `sample/composeApp` (shared Kotlin, `MainViewController()` + `startUpdraft()`) and `sample/iosApp` (xcodegen `project.yml`, `iOSApp.swift` calling `MainViewControllerKt.startUpdraft()`, iOS 14.0 deployment target).
+- **XCFramework**: `:updraft-core:assembleUpdraftCoreXCFramework` builds `UpdraftCore.xcframework` (logic-only; does not include `updraft-ui-compose`).
+- **CI**: `.github/workflows/build.yml` adds an `ios` job (macos-14) running both modules' `iosSimulatorArm64Test`, the XCFramework assemble task, and an `xcodebuild` of `sample/iosApp`. Triggers on `main` and `feature/**` branches.
+- README: real iOS setup replacing the "M2, not yet available" placeholder — Installation, iOS quickstart, and extended Swift integration sections; `updraft-sdk-ios` superseded note added.
+
+### Remains release-time (blocks a 2.0.0 release, not this branch)
+
+- [ ] Run the publish workflow once (`.github/workflows/publish.yml`, all three modules, macos-14, triggered by push to `production`) and verify all three land on Maven Central.
+- [ ] Manual device verification on **both** platforms with real `APP_KEY`/`SDK_KEY` (still empty strings in the sample) — Android checklist above, plus iOS: launch → hint dialog; shake → annotate → form → send; rotate mid-form; update dialog against staging; feedback-enabled toggle.
+- [ ] Archive [`updraft-sdk-ios`](https://github.com/appswithlove/updraft-sdk-ios) and add its final README deprecation banner.
+
+### M2-specific follow-ups (non-blocking, ordered roughly by impact)
+
+1. **iOS shake has no auto-pause on background** — `Updraft.start`'s `createAppForegroundObserver(... onBackground = { })` is a no-op; unlike a real pause, `IosShakeDetector` keeps listening to the accelerometer while backgrounded (Android's equivalent stops the sensor). Low impact (CoreMotion is cheap while backgrounded, and `presentViewController` would just no-op with no key window), but inconsistent with Android behavior.
+2. **`UpdraftIos.presentDialog`/`presentFeedback` can silently drop events** — `topmostViewController() ?: return` and the `presentViewController` call have no retry/queueing; an event that arrives while `rootViewController` is nil (e.g. very early launch) or while another `presentViewController` transition is still in flight is dropped rather than deferred.
+3. **`keyWindow()` helper duplicated** — near-identical `UIApplication.sharedApplication.windows.filterIsInstance<UIWindow>().firstOrNull { it.isKeyWindow() }` exists in both `updraft-core`'s `IosScreenshotGrabber` (`Platform.ios.kt`) and `updraft-ui-compose`'s `UpdraftIos.kt`. No shared internal utility between the two iOS source sets yet.
+4. **Sample `UpdraftSettings` construction duplicated** — Android (`sample/composeApp` androidMain/App) and iOS (`MainViewController.kt#startUpdraft`) each hardcode their own `UpdraftSettings(...)` call; no shared `commonMain` config object.
+5. **CI runner memory tuning** — `ios` job on `macos-14` (7 GB total) overrides Gradle/Kotlin daemon heap to `-Xmx3g` each (`GRADLE_OPTS` in `build.yml`), vs. defaults elsewhere; worth revisiting if iOS builds get memory-constrained as the project grows.
+6. **`sample/iosApp/iosApp/Info.plist` has a stale `UIRequiredDeviceCapabilities: [armv7]`** — meaningless for an arm64-only/simulator build target (armv7 was 32-bit); harmless but should be dropped in a cleanup pass.
+
+## Deferred to M3 (per spec, unchanged from M1)
+
+- Fresh-repo/rename decision, SPM packaging polish, further platform targets.

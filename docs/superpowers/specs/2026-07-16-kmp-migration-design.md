@@ -109,7 +109,7 @@ Android `Context` acquired internally via androidx.startup — no context parame
 ## Milestones
 
 - **M1** (releasable): core KMP (android target) + ui-compose + rewrapped `updraft-sdk` 2.0.0. Android feature parity on new stack.
-- **M2**: iOS targets + actuals + XCFramework + iosApp sample; replaces `updraft-sdk-ios`.
+- **M2** (delivered, see [M2 status](../kmp-migration-m1-status.md#m2-status-2026-07-21)): iOS targets + actuals + XCFramework + iosApp sample; replaces `updraft-sdk-ios`.
 - **M3** (optional): fresh-repo/rename decision, SPM polish, further targets.
 
 ## Risks
