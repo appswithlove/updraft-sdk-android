@@ -224,4 +224,4 @@ In order to locally develop this plugin, the sample project can be used for easy
 
 ## Release
 
-In order to release a new version of this plugin, create a new release on GitHub and the [pipeline](.github/workflows/publish.yml) will automatically publish the new version to Maven Central.
+Pushing to the `production` branch triggers the [publish workflow](.github/workflows/publish.yml), which publishes `updraft-core`, `updraft-ui-compose`, and `updraft-sdk` to Maven Central.
