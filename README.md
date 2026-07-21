@@ -208,7 +208,15 @@ fun FeedbackRoute(screenshotPng: ByteArray?, onClose: () -> Unit) {
 }
 ```
 
-> iOS targets for `updraft-core` and `updraft-ui-compose` are not available yet — they're planned for milestone M2 alongside an XCFramework and iOS sample app.
+### Swift integration
+
+`updraft-core` builds an `UpdraftCore.xcframework` for pure-Swift consumers that don't want to pull in Kotlin/Compose tooling:
+
+```
+./gradlew :updraft-core:assembleUpdraftCoreXCFramework
+```
+
+The framework is written to `updraft-core/build/XCFrameworks/release/UpdraftCore.xcframework`. Drag it into an Xcode project or wrap it as an SPM binary target; how it's distributed (e.g. published alongside a release, hosted as a zip) is a release-time decision, out of scope for M2.
 
 ## Local Development
 

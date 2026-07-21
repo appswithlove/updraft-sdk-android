@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -14,6 +15,7 @@ kotlin {
         }
     }
 
+    val xcf = XCFramework("UpdraftCore")
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
@@ -22,6 +24,7 @@ kotlin {
         target.binaries.framework {
             baseName = "UpdraftCore"
             isStatic = true
+            xcf.add(this)
         }
     }
 
