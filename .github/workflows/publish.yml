@@ -6,7 +6,7 @@ on:
 
 jobs:
   publish:
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx3g -Dkotlin.daemon.jvmargs=-Xmx3g
     steps:
