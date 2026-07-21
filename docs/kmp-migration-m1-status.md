@@ -17,7 +17,7 @@ Full build + all unit tests green. Final adversarial whole-branch review: READY 
 
 ## Release checklist (merge ≠ release — these BLOCK a 2.0.0 release)
 
-- [ ] **Fix `.github/workflows/publish.yml`**: it publishes only `:updraft-sdk`. The `updraft-sdk` POM references `updraft-core`/`updraft-ui-compose` via `api(project(...))` → publishing only one module ships a 2.0.0 whose dependencies don't exist on Maven Central; every consumer build breaks. Add publish tasks for all three modules.
+- [x] **Fix `.github/workflows/publish.yml`** — DONE in M2: now publishes all three modules from a macOS runner. (Was: published only `:updraft-sdk`, whose POM references the other two via `api(project(...))`, so a one-module publish would ship a broken 2.0.0.)
 - [ ] **Manual device verification** (needs real APP_KEY/SDK_KEY — currently empty strings in `app/App.kt`, real keys stripped from repo in 2024):
   1. Launch → feedback hint dialog on first start
   2. Shake → annotate screen; **draw near screen corners**; undo/redo; OK → form; select type; send → progress → closes
@@ -26,7 +26,7 @@ Full build + all unit tests green. Final adversarial whole-branch review: READY 
   5. Lower build number installed → update dialog; "Open" opens browser
   6. Toggle feedback-enabled on dashboard → disabled/how-to dialog on next foreground
   7. Shake twice in a row (second after closing feedback UI) — must work both times
-- [ ] README `Release` section says "create a GitHub release" but workflow triggers on push to `production` — reconcile.
+- [x] README `Release` section reconciled with the `production`-branch push trigger — DONE in M2.
 
 ## Follow-ups (non-blocking, ordered roughly by impact)
 
@@ -68,12 +68,18 @@ Branch: `feature/kmp-migration-m2` (unmerged).
 - **`:updraft-ui-compose` iOS target**: same Compose feedback UI (`FeedbackScreen`, dialogs) compiled for iOS via Compose Multiplatform; `com.appswithlove.updraft.ui.ios.UpdraftIos.autoWire()` auto-presents dialogs/feedback screen on the topmost view controller, and `UpdraftFeedbackViewController(screenshotPng, onClose)` is exposed for manual hosting.
 - **Sample**: `app/` renamed to `sample/` — `sample/composeApp` (shared Kotlin, `MainViewController()` + `startUpdraft()`) and `sample/iosApp` (xcodegen `project.yml`, `iOSApp.swift` calling `MainViewControllerKt.startUpdraft()`, iOS 14.0 deployment target).
 - **XCFramework**: `:updraft-core:assembleUpdraftCoreXCFramework` builds `UpdraftCore.xcframework` (logic-only; does not include `updraft-ui-compose`).
-- **CI**: `.github/workflows/build.yml` adds an `ios` job (macos-14) running both modules' `iosSimulatorArm64Test`, the XCFramework assemble task, and an `xcodebuild` of `sample/iosApp`. Triggers on `main` and `feature/**` branches.
+- **CI**: `.github/workflows/build.yml` adds an `ios` job (macos-15) running both modules' `iosSimulatorArm64Test`, the XCFramework assemble task, and an `xcodebuild` of `sample/iosApp`. Triggers on `main` and `feature/**` branches. **Verified green on CI** (both android + ios jobs) on branch HEAD.
 - README: real iOS setup replacing the "M2, not yet available" placeholder — Installation, iOS quickstart, and extended Swift integration sections; `updraft-sdk-ios` superseded note added.
+
+### Verification findings (fixed on-branch)
+
+- **Runner bumped macos-14 → macos-15**: the xcodegen-produced `project.pbxproj` uses `objectVersion 77` (Xcode 16 format); macos-14 ships Xcode 15 and fails with `Unable to read project 'iosApp.xcodeproj'` (exit 74). Fixed in both `build.yml` and `publish.yml`.
+- **`CADisableMinimumFrameDurationOnPhone` added to `sample/iosApp/iosApp/Info.plist`**: without it, Compose Multiplatform's `PlistSanityCheck` throws `IllegalStateException` and the sample **crashes on launch**. Any CMP-hosting iOS app (including consumer apps) needs this key — documented as a requirement.
+- **End-to-end confirmed**: sample launched on an iPhone 16 simulator; `startUpdraft()` → iOS foreground observer → controller event → `UpdraftIos.autoWire()` → `ComposeUIViewController` renders the CMP feedback hint dialog ("Feedback geben"). Full shared chain works on iOS.
 
 ### Remains release-time (blocks a 2.0.0 release, not this branch)
 
-- [ ] Run the publish workflow once (`.github/workflows/publish.yml`, all three modules, macos-14, triggered by push to `production`) and verify all three land on Maven Central.
+- [ ] Run the publish workflow once (`.github/workflows/publish.yml`, all three modules, macos-15, triggered by push to `production`) and verify all three land on Maven Central.
 - [ ] Manual device verification on **both** platforms with real `APP_KEY`/`SDK_KEY` (still empty strings in the sample) — Android checklist above, plus iOS: launch → hint dialog; shake → annotate → form → send; rotate mid-form; update dialog against staging; feedback-enabled toggle.
 - [ ] Archive [`updraft-sdk-ios`](https://github.com/appswithlove/updraft-sdk-ios) and add its final README deprecation banner.
 
@@ -83,7 +89,7 @@ Branch: `feature/kmp-migration-m2` (unmerged).
 2. **`UpdraftIos.presentDialog`/`presentFeedback` can silently drop events** — `topmostViewController() ?: return` and the `presentViewController` call have no retry/queueing; an event that arrives while `rootViewController` is nil (e.g. very early launch) or while another `presentViewController` transition is still in flight is dropped rather than deferred.
 3. **`keyWindow()` helper duplicated** — near-identical `UIApplication.sharedApplication.windows.filterIsInstance<UIWindow>().firstOrNull { it.isKeyWindow() }` exists in both `updraft-core`'s `IosScreenshotGrabber` (`Platform.ios.kt`) and `updraft-ui-compose`'s `UpdraftIos.kt`. No shared internal utility between the two iOS source sets yet.
 4. **Sample `UpdraftSettings` construction duplicated** — Android (`sample/composeApp` androidMain/App) and iOS (`MainViewController.kt#startUpdraft`) each hardcode their own `UpdraftSettings(...)` call; no shared `commonMain` config object.
-5. **CI runner memory tuning** — `ios` job on `macos-14` (7 GB total) overrides Gradle/Kotlin daemon heap to `-Xmx3g` each (`GRADLE_OPTS` in `build.yml`), vs. defaults elsewhere; worth revisiting if iOS builds get memory-constrained as the project grows.
+5. **CI runner memory tuning** — `ios` job on `macos-15` (7 GB total) overrides Gradle/Kotlin daemon heap to `-Xmx3g` each (`GRADLE_OPTS` in `build.yml`), vs. defaults elsewhere; worth revisiting if iOS builds get memory-constrained as the project grows.
 6. **`sample/iosApp/iosApp/Info.plist` has a stale `UIRequiredDeviceCapabilities: [armv7]`** — meaningless for an arm64-only/simulator build target (armv7 was 32-bit); harmless but should be dropped in a cleanup pass.
 
 ## Deferred to M3 (per spec, unchanged from M1)
