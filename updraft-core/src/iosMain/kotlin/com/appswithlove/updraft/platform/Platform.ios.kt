@@ -13,6 +13,7 @@ import platform.Foundation.timeIntervalSince1970
 import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationDidBecomeActiveNotification
 import platform.UIKit.UIApplicationDidEnterBackgroundNotification
+import platform.UIKit.UIApplicationUserDidTakeScreenshotNotification
 import platform.UIKit.UIGraphicsImageRenderer
 import platform.UIKit.UIImagePNGRepresentation
 import platform.UIKit.UIWindow
@@ -22,9 +23,24 @@ private class IosShakeDetector(private val onShake: () -> Unit) : ShakeDetector 
     private val motionManager = CMMotionManager()
     private var shakeTimestamp = 0.0
     private var enabled = true
+    private var screenshotObserver: Any? = null
 
     @OptIn(ExperimentalForeignApi::class)
     override fun start() {
+        // Legacy Updraft iOS trigger: user takes a screenshot. Also the only
+        // trigger available on the simulator, which has no accelerometer.
+        if (screenshotObserver == null) {
+            screenshotObserver = NSNotificationCenter.defaultCenter.addObserverForName(
+                UIApplicationUserDidTakeScreenshotNotification,
+                `object` = null,
+                queue = NSOperationQueue.mainQueue,
+            ) {
+                if (enabled) {
+                    enabled = false
+                    onShake()
+                }
+            }
+        }
         if (!motionManager.accelerometerAvailable) return
         motionManager.accelerometerUpdateInterval = 1.0 / 60.0
         motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue) { data, _ ->
@@ -44,6 +60,8 @@ private class IosShakeDetector(private val onShake: () -> Unit) : ShakeDetector 
 
     override fun stop() {
         motionManager.stopAccelerometerUpdates()
+        screenshotObserver?.let { NSNotificationCenter.defaultCenter.removeObserver(it) }
+        screenshotObserver = null
     }
 
     override fun setEnabled(enabled: Boolean) {
