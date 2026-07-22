@@ -22,6 +22,30 @@ Updraft is built by App Agencies [Apps with love](https://appswithlove.com/) and
 - minSdkVersion >=23
 - iOS 14.0+ (for `updraft-core` / `updraft-ui-compose` iOS targets)
 
+### Kotlin version compatibility
+
+The SDK is built with Kotlin 2.2 and Compose Multiplatform 1.9. What your project needs depends on how you consume it:
+
+| Your app | Required Kotlin |
+| --- | --- |
+| Java-only Android app | none — Kotlin metadata is not read at runtime |
+| Kotlin Android app | **Kotlin ≥ 2.1** (the Kotlin compiler reads metadata up to one minor version ahead) |
+| KMP / Compose Multiplatform app | **Kotlin ≥ 2.2** (klib consumption requires a matching compiler) |
+| Swift app via `UpdraftCore.xcframework` | none — compiled binary, no Kotlin toolchain involved |
+
+If your Kotlin version is too old, the build fails at compile time (never at runtime) with one of these:
+
+```
+Module 'updraft-core' was compiled with an incompatible version of Kotlin.
+The binary version of its metadata is 2.2.0, expected version is 2.1.0.
+```
+
+```
+KLIB resolver: Could not find "updraft-core" ... compiled with a newer Kotlin compiler
+```
+
+**Fix:** upgrade your project's Kotlin (and for CMP apps, Compose Multiplatform) to the versions above — or stay on Updraft SDK 1.x until you can.
+
 ## Installation
 
 Updraft 2.0.0 ships as three Kotlin Multiplatform artifacts. Pick the one that matches your app:
@@ -197,7 +221,7 @@ UpdraftSettings(
 
 ## Migrating from 1.x
 
-Version 2.0.0 rebuilds the SDK on Kotlin Multiplatform. `updraft-sdk` is still a drop-in Android dependency and behaves the same at runtime, but the setup API changed:
+Version 2.0.0 rebuilds the SDK on Kotlin Multiplatform. `updraft-sdk` is still a drop-in Android dependency and behaves the same at runtime, but the setup API changed. Before migrating, check the [Kotlin version compatibility](#kotlin-version-compatibility) table — projects on Kotlin < 2.1 should stay on 1.x until they upgrade.
 
 | 1.x | 2.0.0 |
 | --- | --- |
