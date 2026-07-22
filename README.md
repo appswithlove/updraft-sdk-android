@@ -346,6 +346,10 @@ Since this framework only wraps `updraft-core`, it does not include the built-in
 
 In order to locally develop this plugin, the sample project can be used for easy testing. Additionally, the gradle task `publishToMavenLocal` allows to install the current version to Maven Local.
 
+### Strings / Loco
+
+UI strings live in `updraft-ui-compose/src/commonMain/composeResources/values*/strings.xml` (en/de) and are shared by Android and iOS. They are managed on [Loco](https://localise.biz); `./gradlew :updraft-ui-compose:updateLoco` re-fetches them into the compose-resources directory (same `strings.xml` format as classic Android resources). The task needs `updraft.locoApiKey=<key>` in `local.properties` and **overwrites local edits** — string changes must be made in Loco first, then pulled. Adding a new key: add it to the Loco project (en + de), run `updateLoco`, reference it via `Res.string.<key>`.
+
 ## Release
 
 Pushing to the `production` branch triggers the [publish workflow](.github/workflows/publish.yml), which publishes `updraft-core`, `updraft-ui-compose`, and `updraft-sdk` to Maven Central.
