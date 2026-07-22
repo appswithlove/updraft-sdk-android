@@ -27,8 +27,16 @@ private class IosShakeDetector(private val onShake: () -> Unit) : ShakeDetector 
 
     @OptIn(ExperimentalForeignApi::class)
     override fun start() {
-        // Legacy Updraft iOS trigger: user takes a screenshot. Also the only
-        // trigger available on the simulator, which has no accelerometer.
+        // Shake reaches iOS apps as a responder-chain motion event, not as
+        // accelerometer data — hook UIWindow to catch it (simulator + device).
+        installMotionShakeHook {
+            if (enabled) {
+                enabled = false
+                onShake()
+            }
+        }
+        // Legacy Updraft iOS trigger: user takes a screenshot. Only fires on
+        // physical hardware; the simulator's screenshot commands are host-side.
         if (screenshotObserver == null) {
             screenshotObserver = NSNotificationCenter.defaultCenter.addObserverForName(
                 UIApplicationUserDidTakeScreenshotNotification,
