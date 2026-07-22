@@ -11,17 +11,12 @@ class App : Application() {
         super.onCreate()
         Updraft.start(
             UpdraftSettings(
-                appKey = APP_KEY,
-                sdkKey = SDK_KEY,
+                appKey = SampleKeys.APP_KEY_ANDROID,
+                sdkKey = SampleKeys.SDK_KEY,
                 baseUrl = UpdraftSettings.BASE_URL_STAGING,
                 logLevel = LogLevel.Debug,
                 showFeedbackAlert = true,
             ),
         )
-    }
-
-    companion object {
-        private const val APP_KEY = ""
-        private const val SDK_KEY = ""
     }
 }

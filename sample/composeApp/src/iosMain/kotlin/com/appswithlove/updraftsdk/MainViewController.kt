@@ -12,8 +12,8 @@ fun MainViewController(): UIViewController = ComposeUIViewController { SampleApp
 fun startUpdraft() {
     Updraft.start(
         UpdraftSettings(
-            appKey = "",
-            sdkKey = "",
+            appKey = SampleKeys.APP_KEY_IOS,
+            sdkKey = SampleKeys.SDK_KEY,
             baseUrl = UpdraftSettings.BASE_URL_STAGING,
             logLevel = LogLevel.Debug,
             showFeedbackAlert = true,
