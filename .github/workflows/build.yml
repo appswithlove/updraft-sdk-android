@@ -3,13 +3,18 @@ name: CI
 on:
   push:
     branches: [ "main", "feature/**" ]
-  pull_request:
-    branches: [ "main" ]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   android:
-
     runs-on: ubuntu-latest
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v4
@@ -18,16 +23,17 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: true
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
 
   ios:
-
     runs-on: macos-15
+    timeout-minutes: 35
 
     env:
       GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx3g -Dkotlin.daemon.jvmargs=-Xmx3g
@@ -39,10 +45,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Cache Kotlin/Native toolchain
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - name: Build and test with Gradle
         run: ./gradlew :updraft-core:iosSimulatorArm64Test :updraft-ui-compose:iosSimulatorArm64Test :updraft-core:assembleUpdraftCoreXCFramework
       - name: Build iOS sample app
