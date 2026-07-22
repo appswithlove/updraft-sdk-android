@@ -10,6 +10,7 @@ import com.appswithlove.updraft.api.response.CheckLastVersionResponse
 import com.appswithlove.updraft.api.response.FeedbackEnabledResponse
 import com.appswithlove.updraft.api.response.GetLastVersionResponse
 import com.appswithlove.updraft.platform.AppInfo
+import com.appswithlove.updraft.platform.currentNavigationStack
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -109,7 +110,8 @@ class UpdraftApi(
             append("build_version", appInfo.versionName)
             append("system_version", appInfo.systemVersion)
             append("device_name", appInfo.deviceName)
-            append("device_uuid", appInfo.deviceUuid)
+            append("device_uudid", appInfo.deviceUuid)
+            append("navigation_stack", currentNavigationStack())
         }
         val uploadJob = launch {
             try {

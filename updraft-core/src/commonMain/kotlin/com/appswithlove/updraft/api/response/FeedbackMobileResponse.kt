@@ -12,6 +12,6 @@ data class FeedbackMobileResponse(
     @SerialName("email") val email: String? = null,
     @SerialName("build_version") val buildVersion: String? = null,
     @SerialName("device_name") val deviceName: String? = null,
-    @SerialName("device_uuid") val deviceUuid: String? = null,
+    @SerialName("device_uudid") val deviceUuid: String? = null,
     @SerialName("navigation_stack") val navigationStack: String? = null,
 )

@@ -87,7 +87,7 @@ class App : Application() {
             UpdraftSettings(
                 appKey = APP_KEY,
                 sdkKey = SDK_KEY,
-                baseUrl = UpdraftSettings.BASE_URL_STAGING, // Optional base url for updraft
+                // baseUrl defaults to the Updraft production API; override only for self-hosted instances
                 logLevel = LogLevel.Debug, // Optional log level
                 showFeedbackAlert = true, // Optional set if should show start alert
                 feedbackEnabled = true, // force disabling feedback if needed

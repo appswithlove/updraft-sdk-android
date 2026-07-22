@@ -16,6 +16,5 @@ class UpdraftSettings(
 
     companion object {
         const val BASE_URL_PROD = "https://app.getupdraft.com/api/"
-        const val BASE_URL_STAGING = "https://u2.mqd.me/api/"
     }
 }

@@ -14,6 +14,6 @@ data class FeedbackMobileRequest(
     @SerialName("build_version") val buildVersion: String? = null,
     @SerialName("system_version") val systemVersion: String? = null,
     @SerialName("device_name") val deviceName: String? = null,
-    @SerialName("device_uuid") val deviceUuid: String? = null,
+    @SerialName("device_uudid") val deviceUuid: String? = null,
     @SerialName("navigation_stack") val navigationStack: String? = null,
 )
