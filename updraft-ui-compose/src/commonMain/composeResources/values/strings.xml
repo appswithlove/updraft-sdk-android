@@ -9,7 +9,7 @@
     <string name="updraft_button_undo">Undo</string>
     <string name="updraft_feedback_description_label">Description</string>
     <string name="updraft_feedback_description_placeholder">Describe the issue...\nBrevity is the source of wit</string>
-    <string name="updraft_feedback_drawDescription">Draw\nsomething\nhere...</string>
+    <string name="updraft_feedback_drawDescription">Draw something here...</string>
     <string name="updraft_feedback_email_placeholder">Your Email</string>
     <string name="updraft_feedback_send_failure_description">An error occurred when sending feedback.</string>
     <string name="updraft_feedback_send_failure_title">Failed to send feedback</string>

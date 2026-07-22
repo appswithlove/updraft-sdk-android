@@ -9,7 +9,7 @@
     <string name="updraft_button_undo">Rückgängig</string>
     <string name="updraft_feedback_description_label">Beschreibung</string>
     <string name="updraft_feedback_description_placeholder">Beschreiben Sie das Thema...</string>
-    <string name="updraft_feedback_drawDescription">Draw\nsomething\nhere...</string>
+    <string name="updraft_feedback_drawDescription">Zeichne etwas hier...</string>
     <string name="updraft_feedback_email_placeholder">Ihre E-Mail</string>
     <string name="updraft_feedback_send_failure_description">Beim Senden des Feedbacks ist ein Fehler aufgetreten.</string>
     <string name="updraft_feedback_send_failure_title">Feedback kann nicht gesendet werden</string>
