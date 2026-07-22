@@ -128,4 +128,5 @@ Manual verification with real keys (Pixel 8 Pro + iPhone 16 simulator, productio
 
 ## Deferred to M3 (per spec, unchanged from M1)
 
-- Fresh-repo/rename decision, SPM packaging polish, further platform targets.
+- ~~Fresh-repo/rename decision~~ — **decided 2026-07-22**: keep this repository and rebrand it as the multiplatform SDK. Code-side prep done (rootProject.name, POM URLs/name, README repositioning → `updraft-sdk`). Manual GitHub steps remain: rename the repo `updraft-sdk-android` → `updraft-sdk` (Settings → General; old URLs redirect), update repo description/topics, archive `updraft-sdk-ios` at release.
+- SPM packaging polish, further platform targets.

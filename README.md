@@ -1,16 +1,18 @@
 ![Updraft: Mobile App Distribution](updraft.png)
 
 [![Maven Central](https://maven-badges.sml.io/sonatype-central/com.appswithlove.updraft/updraft-sdk/badge.svg)](https://maven-badges.sml.io/sonatype-central/com.appswithlove.updraft/updraft-sdk)
-[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/appswithlove/updraft-sdk-ios/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 [![Bluesky](https://img.shields.io/badge/Bluesky-@appswithlove.bsky.social-blue.svg?style=flat)]([https://twitter.com/GetUpdraft](https://bsky.app/profile/appswithlove.bsky.social))
 
 
 # Updraft SDK
 
-Updraft SDK for Android
+Updraft SDK for Android & iOS — built with Kotlin Multiplatform and Compose Multiplatform.
 
 Updraft is a super easy app delivery tool that allows you to simply and quickly distribute your app. It's super useful during beta-testing or if you want to deliver an app without going through the app store review processes. Your users get a link and are guided through the installation process with in a comprehensive web-app. Updraft works with Android and iOS apps and easily integrates with your IDE.
-The SDK adds additional features to apps that are delivered with Updraft: Auto-update for your distributed apps and most importantly the collection of user feedback.
+The SDK adds additional features to apps that are delivered with Updraft: Auto-update for your distributed apps and most importantly the collection of user feedback (shake or screenshot to report, annotate, send).
+
+One codebase serves every kind of app: native Android (Views or Compose), Kotlin/Compose Multiplatform, and pure-Swift iOS apps via an XCFramework. This repository was formerly `updraft-sdk-android`; since 2.0.0 it is the single home of the Updraft SDK for both platforms and supersedes [`updraft-sdk-ios`](https://github.com/appswithlove/updraft-sdk-ios).
 
 Updraft is built by App Agencies [Apps with love](https://appswithlove.com/) and [Moqod](https://moqod.com/). Learn more at [getupdraft.com](https://getupdraft.com/) or follow the latest news on [twitter](https://twitter.com/GetUpdraft).
 
