@@ -52,7 +52,7 @@ Full build + all unit tests green. Final adversarial whole-branch review: READY 
 
 ## Post-migration reminder (from spec)
 
-- Revisit options for Views-based Android apps: the ~2 MB Compose cost — decide between a documented `updraft-core`-only recipe with minimal Views feedback screen, an `updraft-ui-views` artifact, or confirming no consumer needs it.
+- ~~Revisit options for Views-based Android apps~~ — **decided 2026-07-22: Compose ships for Views apps too.** `updraft-sdk` stays Compose-based regardless of the host app's UI stack; no `updraft-ui-views` artifact will be built. Rationale: one UI codebase across four app types (Android Views, Android Compose, CMP, iOS) is the point of the migration; the ~2 MB cost is acceptable (R8 strips unused parts, and most active apps already ship Compose); host activities isolate Compose from the app's own view hierarchy, so nothing leaks into it. Escape hatch for size-sensitive apps stays: depend on `updraft-core` only and bring your own feedback UI (documented in the README).
 
 ## Dev environment note
 
