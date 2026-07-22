@@ -115,10 +115,14 @@ Manual verification with real keys (Pixel 8 Pro + iPhone 16 simulator, productio
 - iOS (iPhone 16 simulator): hint dialog, shake (⌃⌘Z) → feedback UI, manual button flow ✅.
 - `publishToMavenLocal` (signing skipped locally): all 3 modules + iOS klibs land with correct POM chain; fresh consumer app resolves `updraft-sdk:2.0.0` from mavenLocal and compiles ✅. Consumers need `android.useAndroidX=true` (document in README).
 
+### Update feature verification (2026-07-22, later)
+
+- **Android: fully verified E2E** — versionCode-6 release APK uploaded via cURL (`app_upload`), server reports `is_new_version=true` for the installed v5, update dialog shown, "Open" lands on the Updraft install page. Both builds release-signed, so install-over works.
+- **iOS: verified by construction, not E2E.** Updraft's server rejects unsigned IPAs (HTTP 500), and no Apple signing team was available. Audit against the legacy `updraft-sdk-ios`: request/response models field-identical for `check_last_version/` + `get_last_version/`, same version source (CFBundleVersion), same flow order, same `UIApplication.open` call; endpoints empirically proven via the Android E2E on the same account; `UpdraftIos.autoWire` handles `UpdateAvailable`, and dialog presentation is proven live (hint dialog). Remaining untested surface is server-side signed-IPA handling + itms-services install — do once with a provisioned Ad Hoc build at release time.
+
 ### Still open before 2.0.0
 
-- Real-iPhone pass: hardware shake, screenshot trigger, send from iOS (simulator send still unverified end-to-end on dashboard).
-- Update dialog test on both platforms (upload versionCode ≥ 6 build to prod dashboard, enable auto-update).
+- Real-iPhone pass: hardware shake, screenshot trigger, send from iOS (simulator send still unverified end-to-end on dashboard), and one signed-IPA update-dialog run (see above).
 - Publish workflow run + Maven Central verification; archive `updraft-sdk-ios` (unchanged from above).
 - Follow-up: SDK logging is a silent no-op on Android (Ktor default logger → SLF4J with no provider).
 
