@@ -13,7 +13,6 @@ class App : Application() {
             UpdraftSettings(
                 appKey = SampleKeys.APP_KEY_ANDROID,
                 sdkKey = SampleKeys.SDK_KEY,
-                baseUrl = UpdraftSettings.BASE_URL_STAGING,
                 logLevel = LogLevel.Debug,
                 showFeedbackAlert = true,
             ),

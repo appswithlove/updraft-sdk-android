@@ -14,7 +14,6 @@ fun startUpdraft() {
         UpdraftSettings(
             appKey = SampleKeys.APP_KEY_IOS,
             sdkKey = SampleKeys.SDK_KEY,
-            baseUrl = UpdraftSettings.BASE_URL_STAGING,
             logLevel = LogLevel.Debug,
             showFeedbackAlert = true,
         ),

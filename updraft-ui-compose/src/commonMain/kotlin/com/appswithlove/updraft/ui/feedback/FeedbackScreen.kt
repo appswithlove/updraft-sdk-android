@@ -327,10 +327,19 @@ private fun FeedbackTypeDropdown(selected: FeedbackType?, onSelect: (FeedbackTyp
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            shape = RectangleShape,
+            containerColor = Color.White,
         ) {
             FeedbackType.entries.forEach { type ->
                 DropdownMenuItem(
-                    text = { Text(type.name) },
+                    text = {
+                        Text(
+                            text = type.name,
+                            fontSize = 16.sp,
+                            fontStyle = FontStyle.Italic,
+                            color = CharcoalGrey,
+                        )
+                    },
                     onClick = { onSelect(type); expanded = false },
                 )
             }
