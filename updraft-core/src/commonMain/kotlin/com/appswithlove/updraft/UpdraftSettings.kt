@@ -10,6 +10,7 @@ class UpdraftSettings(
     val showFeedbackAlert: Boolean = true,
     val feedbackEnabled: Boolean = true,
     val storeRelease: Boolean = false,
+    val sendNavigationStack: Boolean = true,
 ) {
     fun shouldShowErrors(): Boolean =
         logLevel == LogLevel.Error || logLevel == LogLevel.Debug

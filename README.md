@@ -169,6 +169,14 @@ UpdraftKt.navigationStackProvider = { ["Home", "Settings"] } // from your router
 Setting the provider to `null` restores the platform default. Updraft's own
 screens are always excluded.
 
+The whole feature is optional: to not send any navigation information at all
+(e.g. for privacy reasons), disable it in the settings — the provider and the
+platform default are then never invoked:
+
+```kotlin
+UpdraftSettings(appKey = ..., sdkKey = ..., sendNavigationStack = false)
+```
+
 ## Advanced setup: Logging
 
 To check if data is send properly to Updraft and also see some additional SDK log data in the console, you can set different log levels.

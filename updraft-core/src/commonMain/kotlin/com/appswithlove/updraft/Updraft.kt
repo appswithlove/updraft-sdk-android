@@ -133,8 +133,10 @@ object Updraft {
      */
     var navigationStackProvider: (() -> List<String>)? = null
 
-    private fun resolveNavigationStack(): String =
-        navigationStackProvider?.invoke()?.joinToString(", ") ?: currentNavigationStack()
+    private fun resolveNavigationStack(): String {
+        if (currentSettings?.sendNavigationStack != true) return ""
+        return navigationStackProvider?.invoke()?.joinToString(", ") ?: currentNavigationStack()
+    }
 
     fun start(settings: UpdraftSettings) {
         if (controller != null) return
