@@ -71,6 +71,7 @@ kotlin {
             implementation(compose.ui)
         }
         androidMain.dependencies {
+            implementation(project(":updraft-sdk"))
             implementation(libs.androidx.activity.compose)
         }
     }
