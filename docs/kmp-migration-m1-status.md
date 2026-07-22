@@ -92,6 +92,36 @@ Branch: `feature/kmp-migration-m2` (unmerged).
 5. **CI runner memory tuning** — `ios` job on `macos-15` (7 GB total) overrides Gradle/Kotlin daemon heap to `-Xmx3g` each (`GRADLE_OPTS` in `build.yml`), vs. defaults elsewhere; worth revisiting if iOS builds get memory-constrained as the project grows.
 6. **`sample/iosApp/iosApp/Info.plist` has a stale `UIRequiredDeviceCapabilities: [armv7]`** — meaningless for an arm64-only/simulator build target (armv7 was 32-bit); harmless but should be dropped in a cleanup pass.
 
+## Device verification round (2026-07-22)
+
+Manual verification with real keys (Pixel 8 Pro + iPhone 16 simulator, production API). Keys live in `local.properties` (gitignored): `updraft.appKey.android`, `updraft.appKey.ios`, `updraft.sdkKey` — generated into `SampleKeys.kt` at build time.
+
+### Release-blocking bugs found & fixed
+
+1. **`:updraft-sdk` crashed on any dialog** — module never applied the Compose compiler plugin; `setContent` lambdas compiled as plain `Function0` → `NoSuchMethodError` at runtime. Compiles fine, only explodes on device — exactly what the manual-verification blocker existed for.
+2. **Sample had no Android event collector** — `sample/composeApp` didn't depend on `:updraft-sdk`, so hint/feedback/update dialogs were silently dropped on Android (M2's `app/`→`sample/` rewrite lost the dep).
+3. **`BASE_URL_STAGING` (u2.mqd.me) is dead** — host unreachable; every network call failed. Sample now uses the prod default; the constant is removed from `UpdraftSettings` (baseUrl stays overridable).
+4. **`device_uuid` never arrived on the dashboard** — server field is `device_uudid` (legacy iOS SDK typo, load-bearing). Fixed.
+5. **iOS shake never fired** — shake is a responder-chain `motionEnded:` event, not accelerometer data; `CMMotionManager` can't see it on the simulator and nothing forwarded it. SDK now swizzles `UIWindow.motionEnded:withEvent:` (IMP is a `staticCFunction` — Kotlin block bridging marshals the `NSInteger` arg as an object and segfaults). Screenshot trigger (legacy iOS behavior) also added; fires on hardware only.
+
+### Features added during verification
+
+- **Feedback UI restyled to the legacy design** (charcoal chrome, Updraft logo header, color swatches + halo, dashed undo, draw-hint overlay, white form fields, yellow buttons; safeDrawing insets). Assets recovered from `dd72439^`.
+- **Navigation stack now sent with feedback**: platform default (activity stack / VC chain, Updraft screens excluded) + `Updraft.navigationStackProvider` for single-activity apps (Compose Navigation etc.); opt out via `UpdraftSettings(sendNavigationStack = false)`. README has per-library examples.
+
+### Verified end-to-end
+
+- Android (Pixel 8 Pro, prod API): hint dialog, shake → annotate (draw/colors/undo) → form → send ✅ received on dashboard incl. UUID + navigation stack.
+- iOS (iPhone 16 simulator): hint dialog, shake (⌃⌘Z) → feedback UI, manual button flow ✅.
+- `publishToMavenLocal` (signing skipped locally): all 3 modules + iOS klibs land with correct POM chain; fresh consumer app resolves `updraft-sdk:2.0.0` from mavenLocal and compiles ✅. Consumers need `android.useAndroidX=true` (document in README).
+
+### Still open before 2.0.0
+
+- Real-iPhone pass: hardware shake, screenshot trigger, send from iOS (simulator send still unverified end-to-end on dashboard).
+- Update dialog test on both platforms (upload versionCode ≥ 6 build to prod dashboard, enable auto-update).
+- Publish workflow run + Maven Central verification; archive `updraft-sdk-ios` (unchanged from above).
+- Follow-up: SDK logging is a silent no-op on Android (Ktor default logger → SLF4J with no provider).
+
 ## Deferred to M3 (per spec, unchanged from M1)
 
 - Fresh-repo/rename decision, SPM packaging polish, further platform targets.
