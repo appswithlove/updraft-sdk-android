@@ -23,7 +23,7 @@ private class FakeApi(var feedbackEnabled: Boolean) : UpdraftApiContract {
     override suspend fun checkLastVersion() = CheckLastVersionResponse(isNewVersion = false, isAutoupdateEnabled = false)
     override suspend fun getLastVersion() = GetLastVersionResponse()
     override suspend fun isFeedbackEnabled() = feedbackEnabled
-    override fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String): Flow<Double> = emptyFlow()
+    override fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String, navigationStack: String): Flow<Double> = emptyFlow()
 }
 
 class CheckFeedbackEnabledInteractorTest {

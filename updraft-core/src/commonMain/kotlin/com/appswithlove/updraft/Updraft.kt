@@ -12,6 +12,7 @@ import com.appswithlove.updraft.platform.createKeyValueStore
 import com.appswithlove.updraft.platform.createScreenshotGrabber
 import com.appswithlove.updraft.platform.createShakeDetector
 import com.appswithlove.updraft.platform.currentAppInfo
+import com.appswithlove.updraft.platform.currentNavigationStack
 import com.appswithlove.updraft.platform.openUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,7 @@ internal class UpdraftController(
     private val api: UpdraftApiContract,
     store: KeyValueStore,
     private val scope: CoroutineScope,
+    private val navigationStackSource: () -> String = { "" },
 ) {
     private val checkUpdateInteractor = CheckUpdateInteractor(api)
     private val checkFeedbackInteractor = CheckFeedbackEnabledInteractor(api, store)
@@ -36,6 +38,7 @@ internal class UpdraftController(
     private var updateAlertShown = false
     private var feedbackHintShown = false
     private var pendingScreenshot: ByteArray? = null
+    private var pendingNavigationStack: String? = null
 
     var feedbackUiPresenter: FeedbackUiPresenter? = null
 
@@ -88,6 +91,7 @@ internal class UpdraftController(
 
     fun onFeedbackTriggered(screenshotPng: ByteArray?) {
         pendingScreenshot = screenshotPng
+        pendingNavigationStack = navigationStackSource()
         val presenter = feedbackUiPresenter
         if (presenter != null) {
             presenter.presentFeedback(screenshotPng)
@@ -102,8 +106,11 @@ internal class UpdraftController(
         return screenshot
     }
 
-    fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String): Flow<Double> =
-        api.sendFeedback(screenshotPng, type, description, email)
+    fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String): Flow<Double> {
+        val navigationStack = pendingNavigationStack ?: navigationStackSource()
+        pendingNavigationStack = null
+        return api.sendFeedback(screenshotPng, type, description, email, navigationStack)
+    }
 }
 
 object Updraft {
@@ -117,13 +124,25 @@ object Updraft {
     val events: SharedFlow<UpdraftEvent>
         get() = requireController().events
 
+    /**
+     * Optional hook to report the app's navigation stack with feedback uploads,
+     * captured when feedback is triggered (e.g. on shake). Return screen names
+     * from your navigation library, ordered root to top. When null, the SDK
+     * falls back to the platform default: the activity stack on Android, the
+     * view controller chain on iOS.
+     */
+    var navigationStackProvider: (() -> List<String>)? = null
+
+    private fun resolveNavigationStack(): String =
+        navigationStackProvider?.invoke()?.joinToString(", ") ?: currentNavigationStack()
+
     fun start(settings: UpdraftSettings) {
         if (controller != null) return
         currentSettings = settings
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
         val api = UpdraftApi(settings, currentAppInfo())
         val store = createKeyValueStore(CheckFeedbackEnabledInteractor.STORE_NAME)
-        val newController = UpdraftController(settings, api, store, scope)
+        val newController = UpdraftController(settings, api, store, scope, ::resolveNavigationStack)
         controller = newController
 
         if (settings.feedbackEnabled) {

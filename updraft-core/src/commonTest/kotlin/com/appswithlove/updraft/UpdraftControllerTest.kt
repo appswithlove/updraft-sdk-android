@@ -25,7 +25,7 @@ private class FakeApi : UpdraftApiContract {
     override suspend fun checkLastVersion() = check
     override suspend fun getLastVersion() = last
     override suspend fun isFeedbackEnabled() = feedbackEnabled
-    override fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String): Flow<Double> = emptyFlow()
+    override fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String, navigationStack: String): Flow<Double> = emptyFlow()
 }
 
 class UpdraftControllerTest {

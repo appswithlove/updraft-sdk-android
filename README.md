@@ -120,6 +120,55 @@ A prompt is shown to the user to inform him of the change of state of the feedba
 If enabled, the user is explained how he can give feedback.
 User can take a screenshot to give a feedback.
 
+### Navigation stack
+
+Each feedback upload includes the app's navigation stack, captured at the moment
+feedback is triggered (e.g. on shake). By default the SDK reports the Android
+activity stack or the iOS view controller chain. Single-activity apps (Compose,
+Navigation Component) should plug in their navigation library via
+`Updraft.navigationStackProvider` — return screen names ordered root to top:
+
+**Jetpack Compose Navigation**
+
+```kotlin
+val navController = rememberNavController()
+LaunchedEffect(navController) {
+    Updraft.navigationStackProvider = {
+        listOfNotNull(navController.currentBackStackEntry?.destination?.route)
+    }
+}
+```
+
+Or track the full back stack yourself with a destination listener:
+
+```kotlin
+val breadcrumbs = mutableListOf<String>()
+navController.addOnDestinationChangedListener { _, destination, _ ->
+    destination.route?.let { route ->
+        breadcrumbs.remove(route)
+        breadcrumbs.add(route)
+    }
+}
+Updraft.navigationStackProvider = { breadcrumbs.toList() }
+```
+
+**Fragments (Navigation Component)**
+
+```kotlin
+Updraft.navigationStackProvider = {
+    navController.currentBackStack.value.mapNotNull { it.destination.label?.toString() }
+}
+```
+
+**SwiftUI (iOS)**
+
+```swift
+UpdraftKt.navigationStackProvider = { ["Home", "Settings"] } // from your router state
+```
+
+Setting the provider to `null` restores the platform default. Updraft's own
+screens are always excluded.
+
 ## Advanced setup: Logging
 
 To check if data is send properly to Updraft and also see some additional SDK log data in the console, you can set different log levels.

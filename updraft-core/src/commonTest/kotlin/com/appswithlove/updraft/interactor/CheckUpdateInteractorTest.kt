@@ -20,7 +20,7 @@ private class FakeUpdateApi(
     override suspend fun checkLastVersion() = checkResponse
     override suspend fun getLastVersion() = lastVersionResponse
     override suspend fun isFeedbackEnabled() = feedbackEnabled
-    override fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String): Flow<Double> = emptyFlow()
+    override fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String, navigationStack: String): Flow<Double> = emptyFlow()
 }
 
 class CheckUpdateInteractorTest {

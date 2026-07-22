@@ -68,7 +68,7 @@ class UpdraftApiTest {
             respond("""{}""", HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
         }
         UpdraftApi(settings, appInfo, engine)
-            .sendFeedback(byteArrayOf(1, 2, 3), FeedbackType.Bug, "desc", "a@b.c")
+            .sendFeedback(byteArrayOf(1, 2, 3), FeedbackType.Bug, "desc", "a@b.c", "HomeScreen, DetailScreen")
             .test {
                 assertEquals(1.0, awaitItem())
                 awaitComplete()
@@ -77,6 +77,8 @@ class UpdraftApiTest {
         assertTrue(bodyText.contains("name=app_key") || bodyText.contains("name=\"app_key\""))
         assertTrue(bodyText.contains("bug"))
         assertTrue(bodyText.contains("Pixel"))
+        assertTrue(bodyText.contains("name=navigation_stack") || bodyText.contains("name=\"navigation_stack\""))
+        assertTrue(bodyText.contains("HomeScreen, DetailScreen"))
     }
 
     @Test
@@ -85,7 +87,7 @@ class UpdraftApiTest {
             respond("Bad Request", HttpStatusCode.BadRequest)
         }
         UpdraftApi(settings, appInfo, engine)
-            .sendFeedback(byteArrayOf(1, 2, 3), FeedbackType.Bug, "desc", "a@b.c")
+            .sendFeedback(byteArrayOf(1, 2, 3), FeedbackType.Bug, "desc", "a@b.c", "HomeScreen, DetailScreen")
             .test {
                 awaitError()
             }

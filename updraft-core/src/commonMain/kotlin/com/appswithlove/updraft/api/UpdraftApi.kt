@@ -10,7 +10,6 @@ import com.appswithlove.updraft.api.response.CheckLastVersionResponse
 import com.appswithlove.updraft.api.response.FeedbackEnabledResponse
 import com.appswithlove.updraft.api.response.GetLastVersionResponse
 import com.appswithlove.updraft.platform.AppInfo
-import com.appswithlove.updraft.platform.currentNavigationStack
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -37,7 +36,13 @@ interface UpdraftApiContract {
     suspend fun checkLastVersion(): CheckLastVersionResponse
     suspend fun getLastVersion(): GetLastVersionResponse
     suspend fun isFeedbackEnabled(): Boolean
-    fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String): Flow<Double>
+    fun sendFeedback(
+        screenshotPng: ByteArray,
+        type: FeedbackType,
+        description: String,
+        email: String,
+        navigationStack: String,
+    ): Flow<Double>
 }
 
 class UpdraftApi(
@@ -92,6 +97,7 @@ class UpdraftApi(
         type: FeedbackType,
         description: String,
         email: String,
+        navigationStack: String,
     ): Flow<Double> = callbackFlow {
         val form = formData {
             append(
@@ -111,7 +117,7 @@ class UpdraftApi(
             append("system_version", appInfo.systemVersion)
             append("device_name", appInfo.deviceName)
             append("device_uudid", appInfo.deviceUuid)
-            append("navigation_stack", currentNavigationStack())
+            append("navigation_stack", navigationStack)
         }
         val uploadJob = launch {
             try {
