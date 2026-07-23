@@ -1,0 +1,29 @@
+name: iosApp
+options:
+  bundleIdPrefix: com.appswithlove
+settings:
+  base:
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+targets:
+  iosApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: iosApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.appswithlove.updraftsdk.ios
+        INFOPLIST_FILE: iosApp/Info.plist
+        SWIFT_VERSION: 5.0
+        TARGETED_DEVICE_FAMILY: "1,2"
+    preBuildScripts:
+      - name: Compile Kotlin Framework
+        script: |
+          if [ "YES" = "$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED" ]; then
+            echo "Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \"YES\""
+            exit 0
+          fi
+          cd "$SRCROOT/../.."
+          ./gradlew :sample:composeApp:embedAndSignAppleFrameworkForXcode
+        basedOnDependencyAnalysis: false
