@@ -24,14 +24,35 @@ import com.appswithlove.updraft.ui.resources.updraft_updateAvailable_openButton
 import com.appswithlove.updraft.ui.resources.updraft_updateAvailable_title
 import com.appswithlove.updraft.ui.resources.updraft_updateAvailable_titleWithVersion
 import com.appswithlove.updraft.ui.resources.updraft_updateAvailable_yourVersion
+import com.appswithlove.updraft.ui.resources.updraft_relative_daysAgo
+import com.appswithlove.updraft.ui.resources.updraft_relative_hoursAgo
+import com.appswithlove.updraft.ui.resources.updraft_relative_justNow
+import com.appswithlove.updraft.ui.resources.updraft_relative_monthsAgo
+import com.appswithlove.updraft.ui.resources.updraft_relative_weeksAgo
+import com.appswithlove.updraft.ui.resources.updraft_relative_yearsAgo
+import com.appswithlove.updraft.ui.resources.updraft_updateAvailable_descriptionFull
+import com.appswithlove.updraft.ui.resources.updraft_updateAvailable_releasedRelative
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.Flow
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
+@Composable
+private fun relativeAgePhrase(age: RelativeAge): String = when (age) {
+    is RelativeAge.JustNow -> stringResource(Res.string.updraft_relative_justNow)
+    is RelativeAge.Hours -> pluralStringResource(Res.plurals.updraft_relative_hoursAgo, age.count, age.count)
+    is RelativeAge.Days -> pluralStringResource(Res.plurals.updraft_relative_daysAgo, age.count, age.count)
+    is RelativeAge.Weeks -> pluralStringResource(Res.plurals.updraft_relative_weeksAgo, age.count, age.count)
+    is RelativeAge.Months -> pluralStringResource(Res.plurals.updraft_relative_monthsAgo, age.count, age.count)
+    is RelativeAge.Years -> pluralStringResource(Res.plurals.updraft_relative_yearsAgo, age.count, age.count)
+}
+
 /**
- * Shows a simplified relative-age message (`yourVersion` line if present, plain description
- * otherwise). Formatting `event.createAt` as a human-relative age (e.g. "3 days ago") is left
- * for a follow-up task.
+ * Shows the new-version message, with `event.createAt` rendered as a human-relative
+ * age ("Released 3 weeks ago.") when it is present and parseable.
  */
+@OptIn(ExperimentalTime::class)
 @Composable
 fun UpdateAvailableDialog(
     event: UpdraftEvent.UpdateAvailable,
@@ -43,10 +64,19 @@ fun UpdateAvailableDialog(
     } else {
         stringResource(Res.string.updraft_updateAvailable_title)
     }
-    val message = if (!event.yourVersion.isNullOrBlank()) {
-        stringResource(Res.string.updraft_updateAvailable_yourVersion, event.yourVersion!!)
-    } else {
-        stringResource(Res.string.updraft_updateAvailable_description)
+    val agePhrase = event.createAt
+        ?.let { parseCreateAt(it) }
+        ?.let { relativeAgePhrase(relativeAge(it, Clock.System.now())) }
+    val yourVersion = event.yourVersion
+    val message = when {
+        agePhrase != null && !yourVersion.isNullOrBlank() ->
+            stringResource(Res.string.updraft_updateAvailable_descriptionFull, agePhrase, yourVersion)
+        agePhrase != null ->
+            stringResource(Res.string.updraft_updateAvailable_releasedRelative, agePhrase)
+        !yourVersion.isNullOrBlank() ->
+            stringResource(Res.string.updraft_updateAvailable_yourVersion, yourVersion)
+        else ->
+            stringResource(Res.string.updraft_updateAvailable_description)
     }
     AlertDialog(
         onDismissRequest = {},
