@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="updraft_button_cancel">Abbrechen</string>
     <string name="updraft_button_next">Nächste</string>
@@ -7,6 +7,10 @@
     <string name="updraft_button_redo">Wiederholen</string>
     <string name="updraft_button_sendFeedback">Feedback senden</string>
     <string name="updraft_button_undo">Rückgängig</string>
+    <string name="updraft_feedbackDialog_description">Schütteln Sie das Smartphone, um ein Feedback zu geben oder einen Fehler zu melden.</string>
+    <string name="updraft_feedbackDialog_title">Feedback geben</string>
+    <string name="updraft_feedbackDisabled_description">Die Feedback-Funktion wurde deaktiviert. Sie können nicht länger ein Feedback senden oder einen Fehler melden, indem Sie das Smartphone schütteln.</string>
+    <string name="updraft_feedbackDisabled_title">Feedback Deaktiviert</string>
     <string name="updraft_feedback_description_label">Beschreibung</string>
     <string name="updraft_feedback_description_placeholder">Beschreiben Sie das Thema...</string>
     <string name="updraft_feedback_drawDescription">Zeichne etwas hier...</string>
@@ -20,11 +24,8 @@
     <string name="updraft_feedback_type_design">Entwurf</string>
     <string name="updraft_feedback_type_feedback">Rückmeldung</string>
     <string name="updraft_feedback_type_title">Art der Rückmeldung</string>
-    <string name="updraft_feedbackDialog_description">Schütteln Sie das Smartphone, um ein Feedback zu geben oder einen Fehler zu melden.</string>
-    <string name="updraft_feedbackDialog_title">Feedback geben</string>
-    <string name="updraft_feedbackDisabled_description">Die Feedback-Funktion wurde deaktiviert. Sie können nicht länger ein Feedback senden oder einen Fehler melden, indem Sie das Smartphone schütteln.</string>
-    <string name="updraft_feedbackDisabled_title">Feedback Deaktiviert</string>
     <string name="updraft_global_error">Fehler</string>
+    <string name="updraft_relative_justNow">gerade eben</string>
     <string name="updraft_updateAvailable_description">Möchten Sie die neue Version herunterladen?</string>
     <string name="updraft_updateAvailable_descriptionFull">Veröffentlicht %1$s. Sie verwenden aktuell Version %2$s.</string>
     <string name="updraft_updateAvailable_laterButton">Später</string>
@@ -33,13 +34,4 @@
     <string name="updraft_updateAvailable_title">Neue Version verfügbar</string>
     <string name="updraft_updateAvailable_titleWithVersion">Neue Version (%1$s) verfügbar</string>
     <string name="updraft_updateAvailable_yourVersion">Sie verwenden aktuell Version %1$s.</string>
-    <string name="updraft_relative_justNow">gerade eben</string>
-    <plurals name="updraft_relative_weeksAgo">
-        <item quantity="one">vor %d Woche</item>
-        <item quantity="other">vor %d Wochen</item>
-    </plurals>
-    <plurals name="updraft_relative_monthsAgo">
-        <item quantity="one">vor %d Monat</item>
-        <item quantity="other">vor %d Monaten</item>
-    </plurals>
 </resources>
