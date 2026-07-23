@@ -10,12 +10,12 @@ class UpdraftSettings(
     val showFeedbackAlert: Boolean = true,
     val feedbackEnabled: Boolean = true,
     val storeRelease: Boolean = false,
+    val sendNavigationStack: Boolean = true,
 ) {
     fun shouldShowErrors(): Boolean =
         logLevel == LogLevel.Error || logLevel == LogLevel.Debug
 
     companion object {
         const val BASE_URL_PROD = "https://app.getupdraft.com/api/"
-        const val BASE_URL_STAGING = "https://u2.mqd.me/api/"
     }
 }

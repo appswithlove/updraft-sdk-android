@@ -36,7 +36,13 @@ interface UpdraftApiContract {
     suspend fun checkLastVersion(): CheckLastVersionResponse
     suspend fun getLastVersion(): GetLastVersionResponse
     suspend fun isFeedbackEnabled(): Boolean
-    fun sendFeedback(screenshotPng: ByteArray, type: FeedbackType, description: String, email: String): Flow<Double>
+    fun sendFeedback(
+        screenshotPng: ByteArray,
+        type: FeedbackType,
+        description: String,
+        email: String,
+        navigationStack: String,
+    ): Flow<Double>
 }
 
 class UpdraftApi(
@@ -91,6 +97,7 @@ class UpdraftApi(
         type: FeedbackType,
         description: String,
         email: String,
+        navigationStack: String,
     ): Flow<Double> = callbackFlow {
         val form = formData {
             append(
@@ -109,7 +116,8 @@ class UpdraftApi(
             append("build_version", appInfo.versionName)
             append("system_version", appInfo.systemVersion)
             append("device_name", appInfo.deviceName)
-            append("device_uuid", appInfo.deviceUuid)
+            append("device_uudid", appInfo.deviceUuid)
+            append("navigation_stack", navigationStack)
         }
         val uploadJob = launch {
             try {

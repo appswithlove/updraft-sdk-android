@@ -14,7 +14,7 @@ class DrawnPath(
 )
 
 class DrawingController(
-    initialColor: Color = Color.Red,
+    initialColor: Color = Color.Black,
     initialStrokeWidthPx: Float = 12f,
 ) {
     private val committedPaths = mutableStateListOf<DrawnPath>()

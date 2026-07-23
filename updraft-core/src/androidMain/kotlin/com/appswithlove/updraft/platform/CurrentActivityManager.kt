@@ -9,6 +9,9 @@ object CurrentActivityManager : Application.ActivityLifecycleCallbacks {
     var current: Activity? = null
         private set
 
+    private val activityStack = mutableListOf<Activity>()
+    val stack: List<Activity> get() = activityStack
+
     private val listeners = mutableSetOf<(Activity?) -> Unit>()
 
     fun addListener(listener: (Activity?) -> Unit) {
@@ -26,9 +29,15 @@ object CurrentActivityManager : Application.ActivityLifecycleCallbacks {
         listeners.forEach { it(null) }
     }
 
-    override fun onActivityCreated(activity: Activity, bundle: Bundle?) {}
+    override fun onActivityCreated(activity: Activity, bundle: Bundle?) {
+        activityStack.add(activity)
+    }
+
+    override fun onActivityDestroyed(activity: Activity) {
+        activityStack.remove(activity)
+    }
+
     override fun onActivityStarted(activity: Activity) {}
     override fun onActivityStopped(activity: Activity) {}
     override fun onActivitySaveInstanceState(activity: Activity, bundle: Bundle) {}
-    override fun onActivityDestroyed(activity: Activity) {}
 }
