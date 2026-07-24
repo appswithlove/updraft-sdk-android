@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="updraft_button_cancel">Cancel</string>
+    <string name="updraft_button_next">Next</string>
+    <string name="updraft_button_ok">OK</string>
+    <string name="updraft_button_previous">Previous</string>
+    <string name="updraft_button_redo">Redo</string>
+    <string name="updraft_button_sendFeedback">Send Feedback</string>
+    <string name="updraft_button_undo">Undo</string>
+    <string name="updraft_feedbackDialog_description">Shake the device to give a feedback or report a bug.</string>
+    <string name="updraft_feedbackDialog_title">Give Feedback</string>
+    <string name="updraft_feedbackDisabled_description">Feedback functionality has been disabled. You can no longer send a feedback or report a bug by shaking the device.</string>
+    <string name="updraft_feedbackDisabled_title">Feedback Disabled</string>
+    <string name="updraft_feedback_description_label">Description</string>
+    <string name="updraft_feedback_description_placeholder">Describe the issue...\nBrevity is the source of wit</string>
+    <string name="updraft_feedback_drawDescription">Draw something here...</string>
+    <string name="updraft_feedback_email_placeholder">Your Email</string>
+    <string name="updraft_feedback_send_failure_description">An error occurred when sending feedback.</string>
+    <string name="updraft_feedback_send_failure_title">Failed to send feedback</string>
+    <string name="updraft_feedback_send_inProgress">Sending...</string>
+    <string name="updraft_feedback_send_success">Thank you for the feedback</string>
+    <string name="updraft_feedback_title">Give Feedback</string>
+    <string name="updraft_feedback_type_bug">Bug</string>
+    <string name="updraft_feedback_type_design">Design</string>
+    <string name="updraft_feedback_type_feedback">Feedback</string>
+    <string name="updraft_feedback_type_title">Type of Feedback</string>
+    <string name="updraft_global_error">Error</string>
+    <string name="updraft_relative_justNow">just now</string>
+    <string name="updraft_updateAvailable_description">You will be redirected to download the new version of the app</string>
+    <string name="updraft_updateAvailable_descriptionFull">Released %1$s. You\'re currently on version %2$s.</string>
+    <string name="updraft_updateAvailable_laterButton">Later</string>
+    <string name="updraft_updateAvailable_openButton">Open</string>
+    <string name="updraft_updateAvailable_releasedRelative">Released %1$s.</string>
+    <string name="updraft_updateAvailable_title">New version available</string>
+    <string name="updraft_updateAvailable_titleWithVersion">New version (%1$s) available</string>
+    <string name="updraft_updateAvailable_yourVersion">You\'re currently on version %1$s.</string>
+</resources>

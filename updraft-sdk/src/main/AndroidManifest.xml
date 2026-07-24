@@ -1,23 +1,22 @@
-<manifest package="com.appswithlove.updraft"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application>
         <activity
-            android:name="com.appswithlove.updraft.feedback.FeedbackActivity"
-            android:theme="@style/Theme.Transparent"
-            android:exported="true" />
-
+            android:name="com.appswithlove.updraft.android.UpdraftFeedbackActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Material.NoActionBar" />
+        <activity
+            android:name="com.appswithlove.updraft.android.UpdraftOverlayActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge">
-            <meta-data  android:name="com.appswithlove.updraft.manager.SdkInitializer"
+            <meta-data
+                android:name="com.appswithlove.updraft.android.UpdraftSdkInitializer"
                 android:value="androidx.startup" />
         </provider>
-
     </application>
 </manifest>
